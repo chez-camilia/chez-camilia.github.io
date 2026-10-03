@@ -108,7 +108,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   var SESSION = 'ftoury_session', EMAILKEY = 'ftoury_email', FLAG = 'ftoury_cuisine';
   var app = document.getElementById('app'), ov = document.getElementById('ov');
   var S = { screen: 'boot', pin: '', tab: 'commandes', orders: [], archive: [], items: [], given: {}, known: null, snap: '',
-    menuId: null, confirmId: null, dueKnown: {}, seeded: false, token: '', askMsg: '', askErr: '', clock: null, form: null, formErr: '', loginErr: '', offline: false, audio: null, timer: null, pinForm: false, pinMsg: '',
+    menuId: null, confirmId: null, dueKnown: {}, seeded: false, token: '', askMsg: '', askErr: '', pinForm: false, pinMsg: '', pinOk: '', clock: null, form: null, formErr: '', loginErr: '', offline: false, audio: null, timer: null, pinForm: false, pinMsg: '',
     calcOpen: false, calc: { cur: '0', prev: null, op: null, fresh: false, done: false, hist: [] } };
 
   function E(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -213,45 +213,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         '<button class="btn-red" data-act="reset-save" style="min-height:62px;font-size:20px">Enregistrer cet accès</button>';
     } else if (S.screen === 'setup') {
       h += '<div style="font-size:20px;font-weight:700">Aucun accès n\'existe encore</div>' +
-        '<div class="help" style="font-size:16px">Pour le créer, un e-mail de confirmation est envoyé à l\'administrateur. Le lien reçu permet de choisir l\'e-mail et le code.</div>' + msgs +
-        '<button class="btn-red" data-act="ask" style="min-height:62px;font-size:19px">Envoyer l\'e-mail de confirmation</button>';
+        '<div class="help" style="font-size:16px">L\'accès à la cuisine n\'est pas encore configuré.</div>' + msgs;
     } else {
       h += '<div style="font-size:20px;font-weight:700">Accès cuisine</div>' + fields + msgs +
-        '<button class="btn-red" data-act="login" style="min-height:62px;font-size:20px">Entrer</button>' +
-        '<button class="btn-ghost" data-act="ask" style="font-size:16px">Accès oublié ou à changer</button>';
+        '<button class="btn-red" data-act="login" style="min-height:62px;font-size:20px">Entrer</button>';
     }
     app.innerHTML = h + '</div>';
     var el = document.getElementById(mail ? 'pin' : 'mail'); if (el) el.focus();
-  }
-  function ask() {
-    S.askMsg = ''; S.loginErr = ''; S.askErr = '';
-    var done = function () { if (S.screen === 'main') renderBody(); else renderLogin(); };
-    rpc('demander_confirmation').then(function (r) {
-      if (r && r.error) {
-        S.askErr = r.error === 'TROP_TOT' ? 'Un e-mail vient déjà d\'être envoyé. Attendez 2 minutes avant d\'en redemander un.' : 'Aucun administrateur n\'est défini.';
-        S.loginErr = S.askErr;
-      } else { S.askMsg = 'Un e-mail de confirmation a été envoyé à l\'administrateur. Le lien reçu permet de choisir l\'e-mail et le code.'; }
-      done();
-    }).catch(function () { S.askErr = 'L\'envoi a échoué. Vérifiez le réseau et réessayez.'; S.loginErr = S.askErr; done(); });
-  }
-  function resetSave() {
-    var me = document.getElementById('mail'), pe = document.getElementById('pin');
-    var mail = me ? me.value.trim().toLowerCase() : '', code = pe ? pe.value.trim() : '';
-    S.askMsg = '';
-    if (!/^[^\s|@]+@[^\s|@]+\.[^\s|@]+$/.test(mail)) { S.loginErr = 'Saisissez une adresse e-mail valide.'; renderLogin(); return; }
-    try { localStorage.setItem(EMAILKEY, mail); } catch (e) {}
-    if (!/^[0-9]{4}$/.test(code)) { S.loginErr = 'Le code doit contenir 4 chiffres.'; renderLogin(); return; }
-    var sec = secretOf(mail, code);
-    initAudio();
-    rpc('admin_definir_acces', { p_nouveau: sec }, S.token).then(function (r) {
-      if (r && r.error) { S.token = ''; S.screen = 'login'; S.loginErr = 'Ce lien n\'est pas celui de l\'administrateur. Demandez un nouvel e-mail de confirmation.'; renderLogin(); return; }
-      S.token = ''; S.pin = sec; S.loginErr = '';
-      try { sessionStorage.setItem(SESSION, sec); } catch (e) {}
-      start();
-    }).catch(function () {
-      S.loginErr = 'Le lien a expiré ou la connexion a échoué. Demandez un nouvel e-mail de confirmation.';
-      S.token = ''; S.screen = 'login'; renderLogin();
-    });
   }
   function secretOf(mail, code) { return mail.trim().toLowerCase() + '|' + code; }
   function doLogin(first) {
@@ -265,7 +233,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     S.askMsg = '';
     rpc('verifier_pin', { p_pin: sec }).then(function (r) {
       if (r && r.error) {
-        S.loginErr = r.error === 'BLOQUE' ? 'Trop d\'essais incorrects. L\'accès est bloqué 5 minutes. Pour le changer, utilisez « Accès oublié ou à changer ».' : (r.error === 'PIN_NON_DEFINI' ? 'Aucun accès n\'existe encore.' : 'E-mail ou code incorrect.');
+        S.loginErr = r.error === 'BLOQUE' ? 'Trop d\'essais incorrects. L\'accès est bloqué 5 minutes.' : (r.error === 'PIN_NON_DEFINI' ? 'Aucun accès n\'existe encore.' : 'E-mail ou code incorrect.');
         if (r.error === 'PIN_NON_DEFINI') S.screen = 'setup';
         renderLogin(); return;
       }
@@ -467,9 +435,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         if (list.length) h += '<div style="display:flex;flex-direction:column;gap:10px"><div class="band script">' + E(g) + '</div><div class="grid-p">' + list.map(prodRow).join('') + '</div></div>';
       });
       h += '<div style="border-top:1px solid var(--soft);padding-top:16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start">' +
-        '<button class="btn-ghost" data-act="ask">Changer l\'e-mail ou le code</button>' +
-        '<div class="help">Une confirmation est envoyée par e-mail à l\'administrateur. Rien ne change sans son accord.</div>' +
-        (S.askMsg ? '<div class="info">' + E(S.askMsg) + '</div>' : '') + (S.askErr ? '<div class="err">' + E(S.askErr) + '</div>' : '') + '</div>';
+        (S.pinForm ? '<div class="form" style="align-self:stretch;max-width:420px"><label class="fld">E-mail<input id="newmail" type="email" autocomplete="username" value="' + E(S.pin.split('|')[0]) + '"></label>' +
+          '<label class="fld">Nouveau code à 4 chiffres<input id="newpin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" enterkeyhint="done"></label>' +
+          (S.pinMsg ? '<div class="err">' + E(S.pinMsg) + '</div>' : '') +
+          '<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn-ghost" data-act="pin-cancel">Annuler</button><button class="btn-red" data-act="pin-save">Enregistrer</button></div></div>'
+          : '<button class="btn-ghost" data-act="pin-open">Changer l\'e-mail ou le code</button>' + (S.pinOk ? '<div class="info">' + E(S.pinOk) + '</div>' : '')) + '</div>';
     }
     el.innerHTML = h;
     if (focus) { var inp = el.querySelector('[data-given="' + focus + '"]'); if (inp) { inp.focus(); try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {} } }
@@ -597,8 +567,20 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     }
     else if (act === 'form-cancel') { S.form = null; S.formErr = ''; renderBody(); }
     else if (act === 'form-save') saveForm();
-    else if (act === 'ask') ask();
-    else if (act === 'reset-save') resetSave();
+    else if (act === 'pin-open') { S.pinForm = true; S.pinMsg = ''; S.pinOk = ''; renderBody(); }
+    else if (act === 'pin-cancel') { S.pinForm = false; renderBody(); }
+    else if (act === 'pin-save') {
+      var nm = document.getElementById('newmail'), np = document.getElementById('newpin');
+      var nmail = nm ? nm.value.trim().toLowerCase() : '', ncode = np ? np.value.trim() : '';
+      if (!/^[^\s|@]+@[^\s|@]+\.[^\s|@]+$/.test(nmail)) { S.pinMsg = 'Saisissez une adresse e-mail valide.'; renderBody(); return; }
+      if (!/^[0-9]{4}$/.test(ncode)) { S.pinMsg = 'Le code doit contenir 4 chiffres.'; renderBody(); return; }
+      var nsec = secretOf(nmail, ncode);
+      rpc('changer_acces', { p_ancien: S.pin, p_nouveau: nsec }).then(function (r) {
+        if (r && r.error) { S.pinMsg = 'Le changement a été refusé. Reconnectez-vous puis réessayez.'; renderBody(); return; }
+        S.pin = nsec; try { sessionStorage.setItem(SESSION, nsec); localStorage.setItem(EMAILKEY, nmail); } catch (e) {}
+        S.pinForm = false; S.pinMsg = ''; S.pinOk = 'L\'accès a été modifié.'; renderBody();
+      }).catch(function () { S.pinMsg = 'Le changement n\'a pas été enregistré. Réessayez.'; renderBody(); });
+    }
   });
   document.addEventListener('input', function (ev) {
     var t = ev.target, gid = t.getAttribute && t.getAttribute('data-given'), f = t.getAttribute && t.getAttribute('data-f');
@@ -629,7 +611,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     if (ev.key !== 'Enter') return;
     var t = ev.target;
     if (t.id === 'mail') { ev.preventDefault(); var pe = document.getElementById('pin'); if (pe) pe.focus(); }
-    else if (t.id === 'pin') { ev.preventDefault(); if (S.screen === 'reset') resetSave(); else doLogin(false); }
+    else if (t.id === 'pin') { ev.preventDefault(); doLogin(false); }
     else if (t.tagName === 'INPUT') { ev.preventDefault(); t.blur(); }
   });
   document.addEventListener('focusin', function (ev) {
@@ -644,8 +626,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   var saved = ''; try { saved = sessionStorage.getItem(SESSION) || ''; } catch (e) {}
   var hp = new URLSearchParams(String(location.hash || '').replace(/^#/, ''));
   if (hp.get('access_token') || hp.get('error') || hp.get('error_code')) { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
-  if (hp.get('access_token')) { S.token = hp.get('access_token'); S.screen = 'reset'; renderLogin(); return; }
-  if (hp.get('error') || hp.get('error_code')) S.loginErr = 'Le lien de confirmation a expiré ou a déjà servi. Demandez-en un nouveau.';
+
   rpc('pin_defini').then(function (ok) {
     if (!ok) { S.screen = 'setup'; renderLogin(); return; }
     if (!saved) { S.screen = 'login'; renderLogin(); return; }
