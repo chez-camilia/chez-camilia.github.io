@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FDEFD4">
+<title>Chez Camilia – Commander</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Figtree:wght@500;700;900&display=swap">
+<style>
+:root{--cream:#FDEFD4;--card:#FFF9EC;--ink:#1C1208;--soft:#EBD3A0;--brown:#7A3E0A;--gold:#FFD21F;--red:#B80F24;--darkred:#8F1407;--green:#14803C;--orange:#F59A0C;--muted:#4A3520}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:'Figtree','Trebuchet MS',sans-serif;font-weight:500;-webkit-text-size-adjust:100%}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid #1C63D5;outline-offset:2px}
+.script{font-family:'Kaushan Script',cursive;font-weight:400}
+#app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.hero{position:relative}
+.hero img{display:block;width:100%;height:auto}
+.hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(to bottom,rgba(253,239,212,0),var(--cream))}
+.sub{text-align:center;font-size:27px;line-height:1.1;margin-top:2px}
+.hint{text-align:center;font-size:15px;margin-top:6px;color:var(--muted)}
+.modes{display:flex;gap:8px;padding:16px 16px 0}
+.mode{flex:1 1 0;min-height:52px;border-radius:26px;font-size:16px;font-weight:700;border:2px solid var(--ink);background:#fff;color:var(--ink)}
+.mode.on{background:var(--ink);color:var(--gold)}
+.band{display:inline-block;margin:22px 16px 0;padding:6px 18px 8px;border-radius:22px;background:var(--brown);color:#FFF3D6;font-size:22px}
+.menus{display:flex;flex-direction:column;gap:14px;padding:12px 16px 0}
+.menu{border-radius:20px;overflow:hidden;background:var(--card);border:2px solid var(--soft)}
+.menu.sel,.prod.sel{border-color:#E0A100}
+.prod.sel{background:#FFF4CF}
+.mimg{display:block;width:100%;height:150px;object-fit:cover}
+.mbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px}
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mtitle{font-size:27px;line-height:1.05}
+.price-pill{background:var(--ink);color:var(--gold);font-weight:900;font-size:20px;padding:6px 12px;border-radius:18px;white-space:nowrap}
+.desc{font-size:14px;line-height:1.35;color:var(--muted)}
+.step{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-height:48px}
+.btn-plus,.btn-minus{width:48px;height:48px;border-radius:24px;font-weight:700;line-height:1;padding:0;flex:none}
+.btn-plus{border:none;background:var(--red);color:#fff;font-size:30px}
+.btn-minus{border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:28px}
+.qty{min-width:28px;text-align:center;font-size:23px;font-weight:900}
+.out{font-size:15px;font-weight:700;color:var(--muted);padding:12px 0}
+.carte-title{text-align:center;margin-top:26px}
+.carte-title span{display:inline-block;font-size:30px;line-height:1;padding:4px 18px 8px;background:#F7C51E;border-radius:6px 18px 8px 20px;transform:rotate(-2deg)}
+.cat{padding:0 16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.prod{border-radius:18px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--card);border:2px solid var(--soft)}
+.prod .step{justify-content:center;gap:8px;margin-top:2px}
+.pname{font-size:16px;font-weight:700;text-align:center;line-height:1.15;min-height:37px;display:flex;align-items:center}
+.pdesc{font-size:13px;color:var(--muted);text-align:center;line-height:1.25}
+.pprice{font-size:17px;font-weight:900;color:var(--darkred)}
+.sp{background-image:url(sprite.jpg);background-repeat:no-repeat;flex:none}
+.ph{object-fit:cover;border-radius:12px;flex:none;display:block}
+.ph.none{background:#F3E6C8;border:2px dashed #B79A5E}
+.off{opacity:.55}
+.bar{position:sticky;bottom:0;margin-top:auto;background:var(--ink);color:#FFF3D6;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px}
+.bar .lbl{font-size:13px;color:#E9D7B0}
+.bar .tot{font-size:28px;font-weight:900;color:var(--gold);line-height:1.1}
+.bar button{min-height:56px;padding:0 20px;border-radius:28px;border:none;background:var(--gold);color:var(--ink);font-size:17px;font-weight:900}
+.bar .empty{min-height:56px;padding:0 18px;border-radius:28px;border:2px dashed #8C7A55;color:#E9D7B0;font-size:15px;display:flex;align-items:center}
+.veil{position:fixed;inset:0;background:rgba(28,18,8,.6);display:flex;flex-direction:column;justify-content:flex-end;z-index:10}
+.sheet{width:100%;max-width:480px;margin:0 auto;max-height:94vh;overflow-y:auto;background:var(--cream);border-radius:26px 26px 0 0;padding:20px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.glabel{font-size:15px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.opts{display:flex;gap:8px}
+.opt{flex:1 1 0;min-height:52px;border-radius:16px;font-size:16px;font-weight:700;padding:4px 6px;line-height:1.1;border:2px solid var(--ink);background:#fff;color:var(--ink)}
+.opt.on{background:var(--ink);color:var(--gold)}
+.incl{display:flex;flex-direction:column;gap:6px;background:var(--card);border:2px solid var(--soft);border-radius:16px;padding:10px 6px}
+.incl h3{margin:0;text-align:center;font-size:17px;font-weight:900}
+.incl-row{display:flex;flex-wrap:wrap;row-gap:8px;justify-content:center;align-items:flex-start}
+.incl-plus{width:16px;height:52px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--darkred);flex:none}
+.incl-it{width:56px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px;font-weight:700;text-align:center;line-height:1.15;flex:none}
+.incl-it .sp{border-radius:12px}.incl-it div:last-child{overflow-wrap:anywhere}
+.row{display:flex;gap:10px}
+.btn-ghost{min-height:58px;padding:0 18px;border-radius:29px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:16px;font-weight:700}
+.btn-go{flex:1 1 0;min-height:58px;border-radius:29px;border:none;background:var(--green);color:#fff;font-size:19px;font-weight:900}
+.page{padding:18px 16px 20px;display:flex;flex-direction:column;gap:14px;flex:1}
+.back{align-self:flex-start;min-height:48px;padding:0 16px 0 10px;border-radius:24px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:16px;font-weight:700;display:flex;align-items:center;gap:4px}
+.h1{font-size:36px;line-height:1}
+.lines{background:var(--card);border:2px solid var(--soft);border-radius:20px;padding:6px 14px}
+.line{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--soft);align-items:flex-start}
+.line .q{flex:none;min-width:34px;font-size:18px;font-weight:900;color:var(--darkred)}
+.line .t{flex:1 1 0;min-width:0;font-size:17px;font-weight:700;line-height:1.2}
+.line .d{font-size:14px;font-weight:500;color:var(--muted);margin-top:3px;line-height:1.3}
+.line .p{flex:none;font-size:17px;font-weight:700;white-space:nowrap}
+.modeline{display:flex;justify-content:space-between;gap:10px;padding:12px 0;font-size:16px;font-weight:700}
+.pay{background:var(--ink);border-radius:20px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pay .l{color:#FFF3D6;font-size:16px;font-weight:700;line-height:1.2}
+.pay .v{color:var(--gold);font-size:40px;font-weight:900;line-height:1;white-space:nowrap}
+.btn-valid{min-height:64px;border-radius:32px;border:none;background:var(--red);color:#fff;font-size:21px;font-weight:900}
+.btn-valid[disabled]{opacity:.6}
+.err{background:#FBE3DE;border:2px solid var(--darkred);color:#5E0D05;border-radius:14px;padding:12px;font-size:16px;font-weight:700;line-height:1.3}
+.suivi{flex:1;display:flex;flex-direction:column;align-items:center;padding:28px 20px calc(22px + env(safe-area-inset-bottom,0px));background:var(--orange);color:var(--ink)}
+.suivi.ready{background:var(--green);color:#fff}
+.suivi.done{background:var(--cream);color:var(--ink)}
+.num{font-size:210px;font-weight:900;line-height:.95;letter-spacing:-6px}
+.state{display:flex;align-items:center;gap:12px;margin-top:10px;font-size:30px;font-weight:900}
+.dot{width:18px;height:18px;border-radius:9px;background:var(--ink);animation:pulse 1.4s ease-in-out infinite}
+.msg{margin-top:12px;font-size:18px;text-align:center;line-height:1.35;max-width:300px}
+.suivi .pay{align-self:stretch}
+.btn-line{align-self:stretch;margin-top:12px;min-height:56px;border-radius:28px;border:2px solid currentColor;background:transparent;color:inherit;font-size:17px;font-weight:700}
+.center{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px 24px;font-size:18px;font-weight:700;line-height:1.4}
+.resa{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:2px solid var(--soft);border-radius:20px;padding:12px 14px}
+.resa .lab{font-size:18px;font-weight:900}
+.resa-btn{min-height:54px;min-width:120px;padding:0 18px;border-radius:16px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:26px;font-weight:900}
+.resa-btn.on{background:var(--ink);color:var(--gold)}
+.resa-hint{font-size:14px;color:var(--muted);margin-top:-6px;padding:0 4px}
+.wheels{position:relative;display:flex;justify-content:center;align-items:center;gap:8px;height:220px}
+.wheel{height:220px;width:100px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.wheel::-webkit-scrollbar{display:none}
+.wi{height:44px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;scroll-snap-align:center}
+.wpad{height:88px}
+.wsep{font-size:30px;font-weight:900}
+.wband{position:absolute;left:12%;right:12%;top:88px;height:44px;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);pointer-events:none}
+.kback{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:8px;z-index:30;min-height:44px;padding:0 14px 0 8px;border-radius:22px;background:var(--ink);color:var(--gold);font-size:15px;font-weight:700;display:flex;align-items:center;gap:2px;text-decoration:none;border:2px solid var(--gold)}
+.resa-tag{margin-top:8px;padding:6px 16px;border-radius:18px;background:var(--ink);color:var(--gold);font-size:20px;font-weight:900}
+@keyframes pulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.45}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+</style>
+</head>
+<body>
+<div id="app"><div class="center">Chargement de la carte…</div></div>
+<script>
+(function () {
+  var SB = 'https://gmzutxxasikunliuamof.supabase.co';
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtenV0eHhhc2lrdW5saXVhbW9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMDYzMzUsImV4cCI6MjEwNjU4MjMzNX0.L7F6r0yBYvhy2_88gs3GQQVTSBklnpqYT7fAfKT7D2U';
+  var HEAD = { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' };
+  var CATS = ['Pains & Spécialités', 'Soupes Marocaines', 'Snacks & Salés', 'Accompagnements', 'Boissons', 'Autres'];
+  var STORE = 'ftoury_commande';
+  var app = document.getElementById('app');
+  var S = { items: [], mode: 'place', cart: {}, menus: [], screen: 'carte', sheet: null, order: null, sending: false, error: '', audio: null, timer: null, pickup: '', wheel: false, wheelErr: '' };
+
+  function E(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function eur(c) { return (c / 100).toFixed(2).replace('.', ',') + ' €'; }
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function hm(s) { return s.slice(0, 2) + 'h' + s.slice(3, 5); }
+  function isoHm(iso) { var d = new Date(iso); return pad(d.getHours()) + 'h' + pad(d.getMinutes()); }
+  function wheelHtml() {
+    if (!S.wheel) return '';
+    var h = '<div class="veil" id="wveil"><div class="sheet"><div class="script" style="font-size:30px;line-height:1;text-align:center">Réserver pour</div><div class="wheels"><div class="wheel" id="wh"><div class="wpad"></div>';
+    for (var i = 0; i < 24; i++) h += '<div class="wi">' + pad(i) + '</div>';
+    h += '<div class="wpad"></div></div><div class="wsep">h</div><div class="wheel" id="wm"><div class="wpad"></div>';
+    for (var j = 0; j < 60; j += 5) h += '<div class="wi">' + pad(j) + '</div>';
+    h += '<div class="wpad"></div></div><div class="wband"></div></div>' + (S.wheelErr ? '<div class="err">' + E(S.wheelErr) + '</div>' : '') +
+      '<div class="row"><button class="btn-ghost" data-act="wheel-clear">Dès que possible</button><button class="btn-go" data-act="wheel-ok">Valider l\'heure</button></div></div></div>';
+    return h;
+  }
+  function openWheel() {
+    var hh, mm;
+    if (S.pickup) { hh = +S.pickup.slice(0, 2); mm = +S.pickup.slice(3, 5); }
+    else { var d = new Date(Date.now() + 30 * 60000); hh = d.getHours(); mm = Math.ceil(d.getMinutes() / 5) * 5; if (mm >= 60) { mm = 0; hh = (hh + 1) % 24; } }
+    S.wheel = true; S.wheelErr = '';
+    app.insertAdjacentHTML('beforeend', wheelHtml());
+    var wh = document.getElementById('wh'), wm = document.getElementById('wm');
+    if (wh) wh.scrollTop = hh * 44; if (wm) wm.scrollTop = (mm / 5) * 44;
+  }
+  function closeWheel() { S.wheel = false; var v = document.getElementById('wveil'); if (v) v.remove(); }
+  function byId(id) { for (var i = 0; i < S.items.length; i++) if (S.items[i].id === id) return S.items[i]; return null; }
+
+  function rpc(fn, args) {
+    return fetch(SB + '/rest/v1/rpc/' + fn, { method: 'POST', headers: HEAD, body: JSON.stringify(args || {}) }).then(function (r) {
+      return r.text().then(function (t) {
+        var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
+        if (!r.ok) throw new Error((j && j.message) || 'ERREUR');
+        return j;
+      });
+    });
+  }
+  function loadItems() {
+    return fetch(SB + '/rest/v1/items?select=*&hidden=eq.false&order=sort.asc,created_at.asc', { headers: HEAD })
+      .then(function (r) { if (!r.ok) throw new Error('ERREUR'); return r.json(); })
+      .then(function (rows) { S.items = rows; });
+  }
+
+  function thumb(it, px) {
+    var im = it.image || '', box = 'width:' + px + 'px;height:' + px + 'px;';
+    if (im.indexOf('sprite:') === 0) {
+      var i = parseInt(im.slice(7), 10) || 0;
+      return '<div class="sp" style="' + box + 'background-size:' + px * 5 + 'px ' + px * 4 + 'px;background-position:' + (-(i % 5) * px) + 'px ' + (-Math.floor(i / 5) * px) + 'px"></div>';
+    }
+    if (im.indexOf('file:') === 0) return '<img class="ph" style="' + box + '" src="' + im.slice(5).replace(/[^a-z0-9-]/g, '') + '.jpg" alt="">';
+    if (im.indexOf('data:image/') === 0) return '<img class="ph" style="' + box + '" src="' + E(im) + '" alt="">';
+    return '<div class="ph none" style="' + box + '"></div>';
+  }
+  function bigImg(it) {
+    var im = it.image || '';
+    if (im.indexOf('file:') === 0) return '<img class="mimg" src="' + im.slice(5).replace(/[^a-z0-9-]/g, '') + '.jpg" alt="">';
+    if (im.indexOf('data:image/') === 0) return '<img class="mimg" src="' + E(im) + '" alt="">';
+    return '';
+  }
+
+  function menuCount(id) { var n = 0; S.menus.forEach(function (m) { if (m.id === id) n++; }); return n; }
+  function supplement() { for (var i = 0; i < S.items.length; i++) if (S.items[i].kind === 'supplement') return S.items[i].price_cents; return 0; }
+  function totals() {
+    var total = 0, count = 0, lines = [], groups = {}, order = [];
+    S.menus.forEach(function (m) {
+      var it = byId(m.id); if (!it) return;
+      total += it.price_cents; count++;
+      var k = m.id + '|' + m.choices.join('|');
+      if (!groups[k]) { groups[k] = { it: it, m: m, n: 0 }; order.push(k); }
+      groups[k].n++;
+    });
+    order.forEach(function (k) {
+      var g = groups[k];
+      lines.push({ item_id: g.it.id, qty: g.n, choices: g.m.choices, title: g.it.title, detail: g.m.choices.join(' · '), cents: g.it.price_cents * g.n });
+    });
+    S.items.forEach(function (it) {
+      var q = S.cart[it.id] || 0;
+      if (it.kind !== 'produit' || q <= 0) return;
+      total += q * it.price_cents; count += q;
+      lines.push({ item_id: it.id, qty: q, choices: [], title: it.title, detail: '', cents: q * it.price_cents });
+    });
+    var plateaux = Math.max(S.menus.length, 1);
+    var supp = S.mode === 'emporter' && count > 0 ? plateaux * supplement() : 0;
+    return { total: total + supp, count: count, lines: lines, plateaux: plateaux, supp: supp };
+  }
+
+  function stepper(it, q, isMenu) {
+    if (!it.available) return '<div class="out">Épuisé</div>';
+    var a = isMenu ? 'madd' : 'add', s = isMenu ? 'msub' : 'sub';
+    return (q > 0 ? '<button class="btn-minus" data-act="' + s + '" data-id="' + it.id + '" aria-label="Retirer ' + E(it.title) + '">−</button><div class="qty">' + q + '</div>' : '') +
+      '<button class="btn-plus" data-act="' + a + '" data-id="' + it.id + '" aria-label="Ajouter ' + E(it.title) + '">+</button>';
+  }
+  function menuCard(it) {
+    var q = menuCount(it.id);
+    return '<div class="menu' + (q > 0 ? ' sel' : '') + (it.available ? '' : ' off') + '" id="c-' + it.id + '">' + bigImg(it) +
+      '<div class="mbody"><div class="mhead"><div class="mtitle script">' + E(it.title) + '</div><div class="price-pill">' + eur(it.price_cents) + '</div></div>' +
+      (it.description ? '<div class="desc">' + E(it.description) + '</div>' : '') +
+      '<div class="step">' + stepper(it, q, true) + '</div></div></div>';
+  }
+  function prodCard(it) {
+    var q = S.cart[it.id] || 0;
+    return '<div class="prod' + (q > 0 ? ' sel' : '') + (it.available ? '' : ' off') + '" id="c-' + it.id + '">' + thumb(it, 96) +
+      '<div class="pname">' + E(it.title) + '</div>' + (it.description ? '<div class="pdesc">' + E(it.description) + '</div>' : '') +
+      '<div class="pprice">' + eur(it.price_cents) + '</div><div class="step">' + stepper(it, q, false) + '</div></div>';
+  }
+  function barHtml() {
+    var t = totals();
+    return '<div class="bar" id="bar"><div style="flex:1 1 0;min-width:0"><div class="lbl">' +
+      (t.count === 0 ? 'Total à payer au comptoir' : t.count + (t.count > 1 ? ' articles' : ' article') + ' · à payer au comptoir') +
+      '</div><div class="tot">' + eur(t.total) + '</div></div>' +
+      (t.count > 0 ? '<button data-act="recap">Voir ma commande</button>' : '<div class="empty">Plateau vide</div>') + '</div>';
+  }
+  function sheetHtml() {
+    var sh = S.sheet; if (!sh) return '';
+    var it = byId(sh.id); if (!it) return '';
+    var h = '<div class="veil" id="veil"><div class="sheet"><div class="mhead"><div class="script" style="font-size:30px;line-height:1">' + E(it.title) +
+      '</div><div style="font-size:20px;font-weight:900;color:var(--darkred)">' + eur(it.price_cents) + '</div></div>';
+    (it.choices || []).forEach(function (g, gi) {
+      h += '<div><div class="glabel">' + E(g.label) + '</div><div class="opts">';
+      (g.options || []).forEach(function (o, oi) {
+        h += '<button class="opt' + (sh.choices[gi] === o ? ' on' : '') + '" data-act="pick" data-g="' + gi + '" data-o="' + oi + '">' + E(o) + '</button>';
+      });
+      h += '</div></div>';
+    });
+    if (it.includes && it.includes.length) {
+      h += '<div class="incl"><h3>Inclus</h3><div class="incl-row">';
+      it.includes.forEach(function (inc, n) {
+        h += (n > 0 ? '<div class="incl-plus">+</div>' : '') + '<div class="incl-it">' + thumb({ image: inc.image || ('sprite:' + inc.sprite) }, 52) + '<div>' + E(inc.label) + '</div></div>';
+      });
+      h += '</div></div>';
+    }
+    return h + '<div class="row"><button class="btn-ghost" data-act="sheet-cancel">Annuler</button><button class="btn-go" data-act="sheet-ok">Commander</button></div></div></div>';
+  }
+
+  function renderCarte() {
+    var supp = supplement();
+    var h = '<div class="hero"><img src="header.jpg" alt="Chez Camilia"></div><div class="sub script">Petit-déjeuner Marocain</div>' +
+      '<div class="hint">Choisissez avec <b>+</b>, payez au comptoir</div>' +
+      '<div class="modes"><button class="mode' + (S.mode === 'place' ? ' on' : '') + '" data-act="mode-place">Sur place</button>' +
+      '<button class="mode' + (S.mode === 'emporter' ? ' on' : '') + '" data-act="mode-emp">À emporter' + (supp ? ' +' + eur(supp) : '') + '</button></div>';
+    if (S.error) h += '<div style="padding:14px 16px 0"><div class="err">' + E(S.error) + '</div></div>';
+    var menus = S.items.filter(function (i) { return i.kind === 'menu'; });
+    if (menus.length) h += '<div><div class="band script">Nos Menus</div></div><div class="menus">' + menus.map(menuCard).join('') + '</div>';
+    var prods = S.items.filter(function (i) { return i.kind === 'produit'; });
+    if (prods.length) h += '<div class="carte-title"><span class="script">à la carte</span></div>';
+    var cats = CATS.slice();
+    prods.forEach(function (p) { if (cats.indexOf(p.category) < 0) cats.push(p.category); });
+    cats.forEach(function (c) {
+      var list = prods.filter(function (p) { return p.category === c; });
+      if (!list.length) return;
+      h += '<div class="cat"><div class="band script" style="margin-left:0;margin-right:0;font-size:21px">' + E(c) + '</div><div class="grid">' + list.map(prodCard).join('') + '</div></div>';
+    });
+    app.innerHTML = h + '<div style="height:28px"></div>' + barHtml() + sheetHtml();
+  }
+  function refreshCard(id) {
+    var it = byId(id), el = document.getElementById('c-' + id);
+    if (it && el) el.outerHTML = it.kind === 'menu' ? menuCard(it) : prodCard(it);
+    var bar = document.getElementById('bar'); if (bar) bar.outerHTML = barHtml();
+  }
+  function refreshSheet() {
+    var v = document.getElementById('veil'); if (v) v.remove();
+    if (S.sheet) app.insertAdjacentHTML('beforeend', sheetHtml());
+  }
+
+  function renderRecap() {
+    var t = totals();
+    var h = '<div class="page"><button class="back" data-act="back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Modifier</button>' +
+      '<div class="h1 script">Ma commande</div><div class="lines">';
+    t.lines.forEach(function (l) {
+      h += '<div class="line"><div class="q">' + l.qty + ' ×</div><div class="t">' + E(l.title) + (l.detail ? '<div class="d">' + E(l.detail) + '</div>' : '') + '</div><div class="p">' + eur(l.cents) + '</div></div>';
+    });
+    h += '<div class="modeline"><div>' + (S.mode === 'emporter' ? 'À emporter · ' + t.plateaux + (t.plateaux > 1 ? ' plateaux avec couvercle' : ' plateau avec couvercle') : 'Sur place') +
+      '</div><div>' + (S.mode === 'emporter' ? '+ ' + eur(t.supp) : '') + '</div></div></div>' +
+      '<div class="resa"><div class="lab">Réserver pour</div><button class="resa-btn' + (S.pickup ? ' on' : '') + '" data-act="wheel" aria-label="Choisir l\'heure de retrait">' + (S.pickup ? hm(S.pickup) : '--h--') + '</button></div>' +
+      '<div class="resa-hint">' + (S.pickup ? 'Votre plateau sera prêt pour ' + hm(S.pickup) + '.' : 'Sans heure choisie, la préparation démarre tout de suite.') + '</div>' +
+      '<div class="pay"><div class="l">À payer<br>au comptoir</div><div class="v">' + eur(t.total) + '</div></div>';
+    if (S.error) h += '<div class="err">' + E(S.error) + '</div>';
+    h += '<div style="flex:1"></div><button class="btn-valid" data-act="valider"' + (S.sending ? ' disabled' : '') + '>' + (S.sending ? 'Envoi en cours…' : 'Valider ma commande') + '</button></div>';
+    app.innerHTML = h;
+    window.scrollTo(0, 0);
+  }
+
+  function renderSuivi() {
+    var o = S.order, st = o.status;
+    var cls = st === 'pret' ? ' ready' : st === 'archive' ? ' done' : '';
+    var h = '<div class="suivi' + cls + '"><div class="script" style="font-size:30px;line-height:1">Chez Camilia</div>' +
+      '<div style="margin-top:26px;font-size:20px;font-weight:700">Votre commande</div><div class="num">' + pad(o.num) + '</div>' +
+      (o.pickup_at && st !== 'archive' ? '<div class="resa-tag">Réservée pour ' + isoHm(o.pickup_at) + '</div>' : '');
+    if (st === 'pret') {
+      h += '<div class="state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>C\'est prêt !</div>' +
+        '<div class="msg" style="font-size:20px;font-weight:700">Venez chercher votre plateau au comptoir.</div>';
+    } else if (st === 'archive') {
+      h += '<div class="state">Commande servie</div><div class="msg">Merci et bon appétit !</div>';
+    } else {
+      h += '<div class="state"><div class="dot"></div>En préparation</div><div class="msg">Gardez cette page ouverte. Elle passe au vert quand votre plateau est prêt.</div>';
+      if (!S.audio) h += '<button class="btn-line" data-act="sound" style="align-self:center;padding:0 22px;margin-top:16px">Activer le son</button>';
+    }
+    h += '<div style="flex:1;min-height:20px"></div><div class="pay"><div class="l">À payer<br>au comptoir</div><div class="v" style="font-size:38px">' + eur(o.total_cents) + '</div></div>';
+    if (st !== 'preparation') h += '<button class="btn-line" data-act="new">Nouvelle commande</button>';
+    app.innerHTML = h + '</div>';
+  }
+
+  function render() {
+    if (S.screen === 'suivi' && S.order) renderSuivi();
+    else if (S.screen === 'recap') renderRecap();
+    else renderCarte();
+  }
+
+  function initAudio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (AC && !S.audio) S.audio = new AC();
+      if (S.audio && S.audio.resume) S.audio.resume();
+    } catch (e) {}
+  }
+  function beep() {
+    try {
+      var ctx = S.audio;
+      if (ctx) [0, 0.22, 0.44, 0.9, 1.12, 1.34].forEach(function (t, i) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = [880, 1175, 1568][i % 3];
+        g.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(0.5, ctx.currentTime + t + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.3);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.32);
+      });
+    } catch (e) {}
+    try { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]); } catch (e) {}
+  }
+  function keepAwake() { try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {} }
+
+  function poll() {
+    if (!S.order) return;
+    rpc('get_order', { p_id: S.order.id }).then(function (o) {
+      if (!S.order) return;
+      if (!o) { forget(); return; }
+      var before = S.order.status;
+      S.order = o;
+      if (o.status !== before) {
+        if (o.status === 'pret') beep();
+        if (S.screen === 'suivi') renderSuivi();
+      }
+    }).catch(function () {});
+  }
+  function startPolling() {
+    if (S.timer) clearInterval(S.timer);
+    S.timer = setInterval(poll, 4000);
+    keepAwake();
+  }
+  function forget() {
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    if (S.timer) clearInterval(S.timer);
+    S.timer = null; S.order = null; S.screen = 'carte'; S.cart = {}; S.menus = []; S.error = ''; S.pickup = '';
+    loadItems().then(render).catch(render);
+  }
+
+  function valider() {
+    if (S.sending) return;
+    var t = totals(); if (!t.count) return;
+    initAudio();
+    S.sending = true; S.error = ''; renderRecap();
+    var lines = t.lines.map(function (l) { return { item_id: l.item_id, qty: l.qty, choices: l.choices }; });
+    rpc('place_order', { p_mode: S.mode, p_lines: lines, p_pickup: S.pickup || null }).then(function (r) {
+      S.sending = false;
+      S.order = { id: r.id, num: r.num, total_cents: r.total_cents, status: 'preparation', pickup_at: r.pickup_at || null };
+      try { localStorage.setItem(STORE, r.id); } catch (e) {}
+      S.screen = 'suivi'; render(); window.scrollTo(0, 0); startPolling();
+    }).catch(function (e) {
+      S.sending = false;
+      var m = e && e.message;
+      if (m === 'PRODUIT_INDISPONIBLE' || m === 'CHOIX_INVALIDE') {
+        S.error = 'Un produit de votre commande n\'est plus disponible. La carte a été mise à jour, vérifiez votre commande.';
+        loadItems().then(function () {
+          S.menus = S.menus.filter(function (m2) { var it = byId(m2.id); return it && it.available; });
+          Object.keys(S.cart).forEach(function (id) { var it = byId(id); if (!it || !it.available) delete S.cart[id]; });
+          S.screen = 'carte'; render();
+        }).catch(render);
+      } else if (m === 'HEURE_PASSEE' || m === 'HEURE_INVALIDE') {
+        S.pickup = ''; S.error = 'L\'heure de réservation est déjà passée. Choisissez une autre heure.'; render();
+      } else if (m === 'COMPLET') {
+        S.error = 'Il y a trop de commandes en cours. Réessayez dans une minute.'; render();
+      } else {
+        S.error = 'La commande n\'est pas partie. Vérifiez votre connexion et réessayez.'; render();
+      }
+    });
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest ? ev.target.closest('[data-act]') : null;
+    if (!b) return;
+    var act = b.getAttribute('data-act'), id = b.getAttribute('data-id'), it = id ? byId(id) : null;
+    if (act === 'mode-place' || act === 'mode-emp') { S.mode = act === 'mode-emp' ? 'emporter' : 'place'; var y = window.scrollY; renderCarte(); window.scrollTo(0, y); }
+    else if (act === 'add' && it) { S.cart[id] = Math.min(20, (S.cart[id] || 0) + 1); refreshCard(id); }
+    else if (act === 'sub' && it) { S.cart[id] = Math.max(0, (S.cart[id] || 0) - 1); refreshCard(id); }
+    else if (act === 'madd' && it) {
+      var ch = (it.choices || []).map(function (g) { return (g.options || [])[0] || ''; });
+      if (ch.length || (it.includes && it.includes.length)) { S.sheet = { id: id, choices: ch }; refreshSheet(); }
+      else { S.menus.push({ id: id, choices: [] }); refreshCard(id); }
+    }
+    else if (act === 'msub' && it) {
+      for (var j = S.menus.length - 1; j >= 0; j--) if (S.menus[j].id === id) { S.menus.splice(j, 1); break; }
+      refreshCard(id);
+    }
+    else if (act === 'pick' && S.sheet) {
+      var sit = byId(S.sheet.id), g = +b.getAttribute('data-g'), o = +b.getAttribute('data-o');
+      S.sheet.choices[g] = sit.choices[g].options[o]; refreshSheet();
+    }
+    else if (act === 'sheet-cancel') { S.sheet = null; refreshSheet(); }
+    else if (act === 'sheet-ok' && S.sheet) { var sid = S.sheet.id; S.menus.push({ id: sid, choices: S.sheet.choices.slice() }); S.sheet = null; refreshSheet(); refreshCard(sid); }
+    else if (act === 'recap') { S.error = ''; S.screen = 'recap'; render(); }
+    else if (act === 'back') { S.error = ''; S.screen = 'carte'; render(); }
+    else if (act === 'valider') valider();
+    else if (act === 'wheel') openWheel();
+    else if (act === 'wheel-clear') { S.pickup = ''; closeWheel(); renderRecap(); }
+    else if (act === 'wheel-ok') {
+      var wh = document.getElementById('wh'), wm = document.getElementById('wm');
+      var hh = Math.max(0, Math.min(23, Math.round(wh.scrollTop / 44))), mm = Math.max(0, Math.min(11, Math.round(wm.scrollTop / 44))) * 5;
+      var now = new Date();
+      if (hh * 60 + mm < now.getHours() * 60 + now.getMinutes()) {
+        S.wheelErr = 'Cette heure est déjà passée. Choisissez une heure plus tard aujourd\'hui.';
+        var v = document.getElementById('wveil'); if (v) v.remove();
+        app.insertAdjacentHTML('beforeend', wheelHtml());
+        document.getElementById('wh').scrollTop = hh * 44; document.getElementById('wm').scrollTop = (mm / 5) * 44;
+      } else { S.pickup = pad(hh) + ':' + pad(mm); closeWheel(); renderRecap(); }
+    }
+    else if (act === 'sound') { initAudio(); keepAwake(); renderSuivi(); }
+    else if (act === 'new') forget();
+  });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && S.order) { poll(); keepAwake(); } });
+
+  try {
+    if (localStorage.getItem('ftoury_cuisine') === '1') {
+      document.body.insertAdjacentHTML('beforeend', '<a class="kback" href="cuisine.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Cuisine</a>');
+    }
+  } catch (e) {}
+  var saved = null;
+  try { saved = localStorage.getItem(STORE); } catch (e) {}
+  loadItems().then(function () {
+    if (!saved) { render(); return; }
+    return rpc('get_order', { p_id: saved }).then(function (o) {
+      if (o && o.status !== 'archive') { S.order = o; S.screen = 'suivi'; render(); startPolling(); }
+      else { try { localStorage.removeItem(STORE); } catch (e) {} render(); }
+    });
+  }).catch(function () {
+    app.innerHTML = '<div class="center">La carte ne se charge pas. Vérifiez votre connexion puis rechargez la page.</div>';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FDEFD4">
+<title>Chez Camilia – Cuisine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Figtree:wght@500;700;900&display=swap">
+<style>
+:root{--cream:#FDEFD4;--card:#FFF9EC;--ink:#1C1208;--soft:#EBD3A0;--brown:#7A3E0A;--gold:#FFD21F;--red:#B80F24;--darkred:#8F1407;--green:#14803C;--orange:#F59A0C;--muted:#4A3520}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:'Figtree','Trebuchet MS',sans-serif;font-weight:500;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #1C63D5;outline-offset:2px}
+.script{font-family:'Kaushan Script',cursive;font-weight:400}
+.wrap{max-width:1180px;margin:0 auto;padding:16px 16px 360px;display:flex;flex-direction:column;gap:18px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.brand{display:flex;align-items:baseline;gap:10px;flex:1 1 220px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{min-height:50px;padding:0 18px;border-radius:25px;border:2px solid var(--ink);font-size:16px;font-weight:700;background:#fff;color:var(--ink)}
+.tab.on{background:var(--ink);color:var(--gold)}
+.round{width:50px;height:50px;border-radius:25px;border:2px solid var(--ink);background:#fff;color:var(--ink);padding:0;display:flex;align-items:center;justify-content:center;flex:none}
+.round.y{background:var(--gold)}
+.grid-o{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:start}
+.o{border-radius:20px;overflow:hidden;background:var(--card);border:3px solid var(--orange);display:flex;flex-direction:column}
+.o-h{background:var(--orange);color:var(--ink);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.o.ready{border-color:var(--green)}
+.o.ready .o-h,.o.ready .b-pret{background:var(--green);color:#fff}
+.o-n{font-size:64px;font-weight:900;line-height:1;letter-spacing:-2px}
+.ln{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--soft);align-items:flex-start}
+.ln .q{flex:none;min-width:36px;font-size:20px;font-weight:900;color:var(--darkred)}
+.ln .t{font-size:19px;font-weight:700;line-height:1.2}
+.ln .d{font-size:16px;font-weight:500;color:var(--muted);margin-top:2px;line-height:1.3}
+.rw{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.lab{font-size:16px;font-weight:700}
+.big{font-size:26px;font-weight:900}
+.given{width:124px;min-height:52px;border-radius:12px;border:2px solid var(--ink);padding:0 10px;font-size:26px;font-weight:900;text-align:right;background:#fff;color:var(--red)}
+.bills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.bill{position:relative;overflow:hidden;min-height:58px;border-radius:8px;font-size:21px;font-weight:900;padding:0;border:2px solid currentColor}
+.bill.on{border:4px solid var(--ink)}
+.bill svg{position:absolute;left:0;top:0;width:100%;height:100%;opacity:.3}
+.bill span{position:relative}
+.b5{background:#CFDCC6;color:#2B4A2F}.b10{background:#F2BDB4;color:#7A1D14}.b20{background:#B9D0EE;color:#173F7A}.b50{background:#F6D78C;color:#6B4700}
+.b-pret{min-height:66px;border-radius:16px;border:none;font-size:22px;font-weight:900;padding:0 8px;background:var(--orange);color:var(--ink)}
+.b-arch{min-height:52px;border-radius:16px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:18px;font-weight:700}
+.empty{padding:60px 20px;text-align:center;font-size:20px;font-weight:700;color:var(--muted);border:2px dashed #B79A5E;border-radius:20px}
+.arow{background:var(--card);border:2px solid var(--soft);border-radius:16px;padding:12px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.band{align-self:flex-start;padding:6px 18px 8px;border-radius:22px;background:var(--brown);color:#FFF3D6;font-size:21px}
+.grid-p{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.p{background:var(--card);border:2px solid var(--soft);border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:10px}
+.p.hid{background:#F3E6C8;border:2px dashed #8C7A55}
+.tag{align-self:flex-start;background:var(--muted);color:#fff;font-size:14px;font-weight:700;padding:4px 12px;border-radius:12px}
+.sp{background-image:url(sprite.jpg);background-repeat:no-repeat;flex:none;border-radius:12px}
+.ph{object-fit:cover;border-radius:12px;flex:none;display:block}
+.ph.none{background:#F3E6C8;border:2px dashed #B79A5E}
+.price{width:88px;min-height:48px;border-radius:12px;border:2px solid var(--ink);padding:0 8px;font-size:20px;font-weight:900;text-align:right;background:#fff;color:var(--ink)}
+.pill{min-height:48px;padding:0 14px;border-radius:24px;font-size:15px;font-weight:700;border:2px solid var(--green);background:#fff;color:#14632F}
+.pill.off{border-color:var(--muted);background:var(--muted);color:#fff}
+.act{flex:1 1 90px;min-height:48px;border-radius:14px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:16px;font-weight:700}
+.act.danger{border-color:var(--darkred);color:var(--darkred)}
+.confirm{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:14px;background:#FBE3DE;border:2px solid var(--darkred);font-size:16px;font-weight:700;line-height:1.3;color:#5E0D05}
+.btn-red{min-height:54px;padding:0 20px;border-radius:27px;border:none;background:var(--red);color:#fff;font-size:17px;font-weight:900}
+.btn-dark{min-height:54px;padding:0 20px;border-radius:27px;border:none;background:var(--ink);color:var(--gold);font-size:17px;font-weight:900}
+.btn-ghost{min-height:54px;padding:0 20px;border-radius:27px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:17px;font-weight:700}
+.form{background:var(--card);border:3px solid #E0A100;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:14px;scroll-margin-top:10px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:15px;font-weight:700}
+.fld input,.fld select,.fld textarea{min-height:50px;border-radius:12px;border:2px solid var(--ink);padding:8px 12px;font-size:17px;background:#fff;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 12px 4px 4px;border-radius:14px;border:2px solid var(--soft);background:#fff;color:var(--ink);font-size:15px;font-weight:700;text-align:left}
+.chip.on{border-color:var(--ink);background:#FFF4CF}
+.incl-ed{display:flex;align-items:center;gap:10px}
+.incl-ed input{flex:1 1 0;min-width:0;min-height:48px;border-radius:12px;border:2px solid var(--ink);padding:0 12px;font-size:16px;background:#fff;color:var(--ink)}
+.help{font-size:14px;font-weight:500;color:var(--muted);line-height:1.3}
+.err{background:#FBE3DE;border:2px solid var(--darkred);color:#5E0D05;border-radius:14px;padding:12px;font-size:16px;font-weight:700;line-height:1.3}
+.veil{position:fixed;inset:0;background:rgba(28,18,8,.6);display:flex;align-items:center;justify-content:center;z-index:10}
+.calc{width:75%;height:75%;min-width:280px;max-width:560px;background:var(--cream);border-radius:24px;border:3px solid var(--ink);padding:14px;display:flex;flex-direction:column;gap:12px}
+.cdisp{background:var(--ink);border-radius:16px;padding:10px 16px;text-align:right;overflow:hidden}
+.cexpr{min-height:24px;max-height:76px;overflow-y:auto;font-size:19px;font-weight:700;line-height:1.3;color:#E9D7B0;overflow-wrap:anywhere}
+.cval{font-size:46px;font-weight:900;line-height:1.1;color:var(--gold);white-space:nowrap}
+.ckeys{flex:1 1 0;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr));gap:8px}
+.ck{min-height:44px;border-radius:14px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:26px;font-weight:900;padding:0}
+.ck.op{background:var(--brown);color:#fff}.ck.eq{background:var(--red);color:#fff}.ck.fn{background:var(--gold)}
+.login{max-width:380px;margin:0 auto;padding:60px 20px;display:flex;flex-direction:column;gap:16px;text-align:center}
+.login input{min-height:64px;border-radius:16px;border:2px solid var(--ink);font-size:32px;font-weight:900;text-align:center;letter-spacing:8px;background:#fff;color:var(--ink)}
+.login input.mail{font-size:18px;letter-spacing:0;font-weight:700;min-height:58px}
+.resa-k{background:var(--red);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:22px;font-weight:900;line-height:1.15}
+.resa-k svg{flex:none;animation:hb 1.1s ease-in-out infinite}
+.resa-k.due{background:#5E0D05}
+.o.sched{border-color:var(--red)}
+@keyframes hb{0%{transform:scale(1)}14%{transform:scale(1.35)}28%{transform:scale(1)}42%{transform:scale(1.25)}70%{transform:scale(1)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.resa-k svg{animation:none}}
+.info{background:#E3F1E6;border:2px solid var(--green);color:#0E4A22;border-radius:14px;padding:12px;font-size:16px;font-weight:700;line-height:1.35}
+.offline{background:var(--darkred);color:#fff;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="ov"></div>
+<script>
+(function () {
+  var SB = 'https://gmzutxxasikunliuamof.supabase.co';
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtenV0eHhhc2lrdW5saXVhbW9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMDYzMzUsImV4cCI6MjEwNjU4MjMzNX0.L7F6r0yBYvhy2_88gs3GQQVTSBklnpqYT7fAfKT7D2U';
+  var HEAD = { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' };
+  var CATS = ['Pains & Spécialités', 'Soupes Marocaines', 'Snacks & Salés', 'Accompagnements', 'Boissons', 'Autres'];
+  var SESSION = 'ftoury_session', EMAILKEY = 'ftoury_email', FLAG = 'ftoury_cuisine';
+  var app = document.getElementById('app'), ov = document.getElementById('ov');
+  var S = { screen: 'boot', pin: '', tab: 'commandes', orders: [], archive: [], items: [], given: {}, known: null, snap: '',
+    menuId: null, confirmId: null, dueKnown: {}, seeded: false, token: '', askMsg: '', askErr: '', clock: null, form: null, formErr: '', loginErr: '', offline: false, audio: null, timer: null, pinForm: false, pinMsg: '',
+    calcOpen: false, calc: { cur: '0', prev: null, op: null, fresh: false, done: false, hist: [] } };
+
+  function E(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function eur(c) { return (c / 100).toFixed(2).replace('.', ',') + ' €'; }
+  function num(c) { return (c / 100).toFixed(2).replace('.', ','); }
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function cents(str) { var v = parseFloat(String(str).replace(',', '.').replace(/[^0-9.]/g, '')); return isNaN(v) ? null : Math.round(v * 100); }
+  function hhmm(iso) { var d = new Date(iso); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  function item(id) { for (var i = 0; i < S.items.length; i++) if (S.items[i].id === id) return S.items[i]; return null; }
+  function order(id) { for (var i = 0; i < S.orders.length; i++) if (S.orders[i].id === id) return S.orders[i]; return null; }
+
+  function rpc(fn, args, token) {
+    var hd = token ? { apikey: KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' } : HEAD;
+    return fetch(SB + '/rest/v1/rpc/' + fn, { method: 'POST', headers: hd, body: JSON.stringify(args || {}) }).then(function (r) {
+      return r.text().then(function (t) {
+        var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
+        if (!r.ok) throw new Error((j && j.message) || 'ERREUR');
+        return j;
+      });
+    });
+  }
+  function krpc(fn, args) {
+    var a = Object.assign({ p_pin: S.pin }, args || {});
+    return rpc(fn, a).then(function (r) {
+      if (r && r.error) {
+        lock(r.error === 'BLOQUE' ? 'Trop d\'essais incorrects. Réessayez dans 5 minutes.' : 'Vos identifiants ont changé. Reconnectez-vous.');
+        throw new Error('PIN_INVALIDE');
+      }
+      return r;
+    });
+  }
+  function loadItems() {
+    return fetch(SB + '/rest/v1/items?select=*&order=sort.asc,created_at.asc', { headers: HEAD })
+      .then(function (r) { if (!r.ok) throw new Error('ERREUR'); return r.json(); })
+      .then(function (rows) { S.items = rows; });
+  }
+
+  function initAudio() {
+    try { var AC = window.AudioContext || window.webkitAudioContext; if (AC && !S.audio) S.audio = new AC(); if (S.audio && S.audio.resume) S.audio.resume(); } catch (e) {}
+  }
+  function beep() {
+    try {
+      var ctx = S.audio;
+      if (ctx) [0, 0.25].forEach(function (t, i) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'triangle'; o.frequency.value = [660, 990][i];
+        g.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(0.5, ctx.currentTime + t + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.35);
+        o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.4);
+      });
+    } catch (e) {}
+  }
+
+  function poll() {
+    if (S.screen !== 'main') return;
+    krpc('kitchen_orders').then(function (r) {
+      var wasOff = S.offline; S.offline = false;
+      var snap = JSON.stringify(r);
+      var ids = {}; r.active.forEach(function (o) { ids[o.id] = 1; });
+      if (S.known) { var fresh = r.active.some(function (o) { return !S.known[o.id]; }); if (fresh) beep(); }
+      S.known = ids;
+      if (snap === S.snap && !wasOff) return;
+      S.snap = snap; S.orders = r.active; S.archive = r.archive;
+      if (!S.seeded) { S.seeded = true; S.orders.forEach(function (o) { if (o.pickup_at && isDue(o)) S.dueKnown[o.id] = 1; }); }
+      renderTop();
+      if (S.tab !== 'produits') renderBody();
+    }).catch(function (e) {
+      if (e.message !== 'PIN_INVALIDE' && !S.offline) { S.offline = true; renderTop(); }
+    });
+  }
+  function start() {
+    S.screen = 'main'; S.known = null; S.snap = ''; S.dueKnown = {}; S.seeded = false;
+    try { localStorage.setItem(FLAG, '1'); } catch (e) {}
+    app.innerHTML = '<div class="wrap"><div id="top"></div><div id="body" style="display:flex;flex-direction:column;gap:18px"></div></div>';
+    renderTop(); renderBody();
+    loadItems().then(function () { if (S.tab === 'produits') renderBody(); }).catch(function () {});
+    poll();
+    if (S.timer) clearInterval(S.timer);
+    S.timer = setInterval(poll, 4000);
+    if (S.clock) clearInterval(S.clock);
+    S.clock = setInterval(tick, 20000);
+    try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {}
+  }
+  function lock(msg) {
+    try { sessionStorage.removeItem(SESSION); localStorage.removeItem(FLAG); } catch (e) {}
+    if (S.timer) clearInterval(S.timer);
+    if (S.clock) clearInterval(S.clock);
+    S.pin = ''; S.screen = 'login'; S.loginErr = msg || ''; ov.innerHTML = ''; S.calcOpen = false;
+    renderLogin();
+  }
+
+  function renderLogin() {
+    var mail = '', h = '<div class="login"><div class="script" style="font-size:40px;line-height:1">Chez Camilia</div>';
+    try { mail = localStorage.getItem(EMAILKEY) || ''; } catch (e) {}
+    var fields = '<input id="mail" class="mail" type="email" autocomplete="username" enterkeyhint="next" placeholder="Votre e-mail" aria-label="E-mail" value="' + E(mail) + '">' +
+      '<input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="4" enterkeyhint="done" placeholder="····" aria-label="Code à 4 chiffres">';
+    var msgs = (S.askMsg ? '<div class="info">' + E(S.askMsg) + '</div>' : '') + (S.loginErr ? '<div class="err">' + E(S.loginErr) + '</div>' : '');
+    if (S.screen === 'reset') {
+      h += '<div style="font-size:20px;font-weight:700">Choisissez l\'accès à la cuisine</div>' +
+        '<div class="help" style="font-size:16px">L\'e-mail et le code à 4 chiffres qui serviront à entrer dans la cuisine.</div>' + fields + msgs +
+        '<button class="btn-red" data-act="reset-save" style="min-height:62px;font-size:20px">Enregistrer cet accès</button>';
+    } else if (S.screen === 'setup') {
+      h += '<div style="font-size:20px;font-weight:700">Aucun accès n\'existe encore</div>' +
+        '<div class="help" style="font-size:16px">Pour le créer, un e-mail de confirmation est envoyé à l\'administrateur. Le lien reçu permet de choisir l\'e-mail et le code.</div>' + msgs +
+        '<button class="btn-red" data-act="ask" style="min-height:62px;font-size:19px">Envoyer l\'e-mail de confirmation</button>';
+    } else {
+      h += '<div style="font-size:20px;font-weight:700">Accès cuisine</div>' + fields + msgs +
+        '<button class="btn-red" data-act="login" style="min-height:62px;font-size:20px">Entrer</button>' +
+        '<button class="btn-ghost" data-act="ask" style="font-size:16px">Accès oublié ou à changer</button>';
+    }
+    app.innerHTML = h + '</div>';
+    var el = document.getElementById(mail ? 'pin' : 'mail'); if (el) el.focus();
+  }
+  function ask() {
+    S.askMsg = ''; S.loginErr = ''; S.askErr = '';
+    var done = function () { if (S.screen === 'main') renderBody(); else renderLogin(); };
+    rpc('demander_confirmation').then(function (r) {
+      if (r && r.error) {
+        S.askErr = r.error === 'TROP_TOT' ? 'Un e-mail vient déjà d\'être envoyé. Attendez 2 minutes avant d\'en redemander un.' : 'Aucun administrateur n\'est défini.';
+        S.loginErr = S.askErr;
+      } else { S.askMsg = 'Un e-mail de confirmation a été envoyé à l\'administrateur. Le lien reçu permet de choisir l\'e-mail et le code.'; }
+      done();
+    }).catch(function () { S.askErr = 'L\'envoi a échoué. Vérifiez le réseau et réessayez.'; S.loginErr = S.askErr; done(); });
+  }
+  function resetSave() {
+    var me = document.getElementById('mail'), pe = document.getElementById('pin');
+    var mail = me ? me.value.trim().toLowerCase() : '', code = pe ? pe.value.trim() : '';
+    S.askMsg = '';
+    if (!/^[^\s|@]+@[^\s|@]+\.[^\s|@]+$/.test(mail)) { S.loginErr = 'Saisissez une adresse e-mail valide.'; renderLogin(); return; }
+    try { localStorage.setItem(EMAILKEY, mail); } catch (e) {}
+    if (!/^[0-9]{4}$/.test(code)) { S.loginErr = 'Le code doit contenir 4 chiffres.'; renderLogin(); return; }
+    var sec = secretOf(mail, code);
+    initAudio();
+    rpc('admin_definir_acces', { p_nouveau: sec }, S.token).then(function (r) {
+      if (r && r.error) { S.token = ''; S.screen = 'login'; S.loginErr = 'Ce lien n\'est pas celui de l\'administrateur. Demandez un nouvel e-mail de confirmation.'; renderLogin(); return; }
+      S.token = ''; S.pin = sec; S.loginErr = '';
+      try { sessionStorage.setItem(SESSION, sec); } catch (e) {}
+      start();
+    }).catch(function () {
+      S.loginErr = 'Le lien a expiré ou la connexion a échoué. Demandez un nouvel e-mail de confirmation.';
+      S.token = ''; S.screen = 'login'; renderLogin();
+    });
+  }
+  function secretOf(mail, code) { return mail.trim().toLowerCase() + '|' + code; }
+  function doLogin(first) {
+    var me = document.getElementById('mail'), pe = document.getElementById('pin');
+    var mail = me ? me.value.trim().toLowerCase() : '', code = pe ? pe.value.trim() : '';
+    initAudio();
+    if (!/^[^\s|@]+@[^\s|@]+\.[^\s|@]+$/.test(mail)) { S.loginErr = 'Saisissez une adresse e-mail valide.'; renderLogin(); return; }
+    try { localStorage.setItem(EMAILKEY, mail); } catch (e) {}
+    if (!/^[0-9]{4}$/.test(code)) { S.loginErr = 'Le code doit contenir 4 chiffres.'; renderLogin(); return; }
+    var sec = secretOf(mail, code);
+    S.askMsg = '';
+    rpc('verifier_pin', { p_pin: sec }).then(function (r) {
+      if (r && r.error) {
+        S.loginErr = r.error === 'BLOQUE' ? 'Trop d\'essais incorrects. L\'accès est bloqué 5 minutes. Pour le changer, utilisez « Accès oublié ou à changer ».' : (r.error === 'PIN_NON_DEFINI' ? 'Aucun accès n\'existe encore.' : 'E-mail ou code incorrect.');
+        if (r.error === 'PIN_NON_DEFINI') S.screen = 'setup';
+        renderLogin(); return;
+      }
+      S.pin = sec; S.loginErr = '';
+      try { sessionStorage.setItem(SESSION, sec); } catch (e) {}
+      start();
+    }).catch(function () {
+      S.loginErr = 'Connexion impossible. Vérifiez le réseau et réessayez.';
+      renderLogin();
+    });
+  }
+
+  function dueAt(o) { return o.pickup_at ? new Date(o.pickup_at).getTime() - 5 * 60000 : null; }
+  function isDue(o) { var d = dueAt(o); return d !== null && Date.now() >= d; }
+  function sortedOrders() {
+    var now = Date.now();
+    var key = function (o) {
+      var d = dueAt(o);
+      if (d === null) return new Date(o.created_at).getTime();
+      return now >= d ? new Date(o.pickup_at).getTime() - 1e14 : d;
+    };
+    return S.orders.slice().sort(function (a, b) { return key(a) - key(b); });
+  }
+  function tick() {
+    if (S.screen !== 'main') return;
+    var rang = false;
+    S.orders.forEach(function (o) {
+      if (o.pickup_at && o.status === 'preparation' && isDue(o) && !S.dueKnown[o.id]) { S.dueKnown[o.id] = 1; rang = true; }
+    });
+    if (rang) beep();
+    var has = S.orders.some(function (o) { return o.pickup_at; });
+    if (S.tab === 'commandes' && (rang || has)) renderBody();
+  }
+  function hhmmLocal(iso) { var d = new Date(iso); return pad(d.getHours()) + 'h' + pad(d.getMinutes()); }
+
+  function renderTop() {
+    var el = document.getElementById('top'); if (!el) return;
+    var tabs = [['commandes', 'Commandes (' + S.orders.length + ')'], ['archive', 'Archive (' + S.archive.length + ')'], ['produits', 'Produits et prix']];
+    el.innerHTML = '<div class="top"><div class="brand"><div class="script" style="font-size:32px;line-height:1">Chez Camilia</div><div style="font-size:16px;font-weight:700;color:var(--brown)">Cuisine</div></div>' +
+      '<div class="tabs">' + tabs.map(function (t) { return '<button class="tab' + (S.tab === t[0] ? ' on' : '') + '" data-act="tab" data-id="' + t[0] + '">' + t[1] + '</button>'; }).join('') +
+      '<a class="tab" href="index.html" style="display:flex;align-items:center;text-decoration:none">Voir la page client</a>' +
+      '<button class="round y" data-act="calc" aria-label="Calculatrice"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M8.5 6.5h7v3h-7z"/><path d="M8.5 13.5h.01M12 13.5h.01M15.5 13.5h.01M8.5 17.5h.01M12 17.5h.01M15.5 17.5h.01"/></svg></button>' +
+      '<button class="round" data-act="lock" aria-label="Verrouiller"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg></button>' +
+      '</div></div>' + (S.offline ? '<div class="offline" style="margin-top:12px">Connexion perdue. Nouvel essai en cours…</div>' : '');
+  }
+
+  var BILL_SVG = (function () {
+    var st = '';
+    for (var a = 0; a < 12; a++) st += '<circle cx="' + (64 + 9 * Math.cos(a * Math.PI / 6)).toFixed(1) + '" cy="' + (20 + 9 * Math.sin(a * Math.PI / 6)).toFixed(1) + '" r="1.3" fill="currentColor" stroke="none"/>';
+    return '<svg aria-hidden="true" viewBox="0 0 80 56" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 56V30a11 11 0 0 1 22 0v26"/><path d="M10.5 56V30.5a6.5 6.5 0 0 1 13 0V56"/><path d="M30 56V36a8 8 0 0 1 16 0v20"/><path d="M2 46h48"/><path d="M0 6q10-5 20 0t20 0t20 0t20 0"/><path d="M0 10q10-5 20 0t20 0t20 0t20 0"/><path d="M0 14q10-5 20 0t20 0t20 0t20 0"/><path d="M50 50q7.5-4 15 0t15 0"/><path d="M50 54q7.5-4 15 0t15 0"/>' + st + '</svg>';
+  })();
+  function rendu(o) {
+    var g = cents(S.given[o.id] || '');
+    if (g === null) return { l: 'À rendre', v: '—', c: 'var(--ink)' };
+    var d = g - o.total_cents;
+    return d < 0 ? { l: 'Il manque', v: eur(-d), c: 'var(--darkred)' } : { l: 'À rendre', v: eur(d), c: '#14632F' };
+  }
+  function renduHtml(o) { var r = rendu(o); return '<div class="lab">' + r.l + '</div><div class="big" style="color:' + r.c + '">' + r.v + '</div>'; }
+  function billsHtml(o) {
+    var g = cents(S.given[o.id] || '');
+    return [5, 10, 20, 50].map(function (v) {
+      return '<button class="bill b' + v + (g === v * 100 ? ' on' : '') + '" data-act="bill" data-id="' + o.id + '" data-v="' + v + '">' + BILL_SVG + '<span>' + v + ' €</span></button>';
+    }).join('');
+  }
+  function orderCard(o) {
+    var ready = o.status === 'pret';
+    var due = isDue(o);
+    var h = '<div class="o' + (ready ? ' ready' : (o.pickup_at ? ' sched' : '')) + '" id="o-' + o.id + '">' +
+      (o.pickup_at ? '<div class="resa-k' + (due ? ' due' : '') + '"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><div>' +
+        (due ? 'À préparer maintenant<br>' : '') + 'Réservée pour ' + hhmmLocal(o.pickup_at) + '</div></div>' : '') +
+      '<div class="o-h"><div class="o-n">' + pad(o.num) + '</div><div style="text-align:right">' +
+      '<div style="font-size:18px;font-weight:900">' + (o.mode === 'emporter' ? 'À emporter' : 'Sur place') + '</div>' +
+      '<div style="font-size:15px;font-weight:700">' + (ready ? 'Prêt' : 'En préparation') + ' · ' + hhmm(o.created_at) + '</div></div></div><div style="padding:6px 16px 0">';
+    (o.lines || []).forEach(function (l) {
+      h += '<div class="ln"><div class="q">' + l.qty + ' ×</div><div><div class="t">' + E(l.title) + '</div>' + (l.detail ? '<div class="d">' + E(l.detail) + '</div>' : '') + '</div></div>';
+    });
+    if (o.mode === 'emporter') h += '<div class="ln"><div class="q">' + o.plateaux + ' ×</div><div><div class="t">Plateau à emporter</div></div></div>';
+    h += '</div><div class="rw" data-top="1" style="padding:12px 16px;scroll-margin-top:8px"><div class="lab">À encaisser</div><div class="big">' + eur(o.total_cents) + '</div></div>' +
+      '<div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:10px">' +
+      '<label class="rw lab" style="align-items:center">Client<span style="display:flex;align-items:center;gap:6px">' +
+      '<input class="given" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0,00" data-given="' + o.id + '" value="' + E(S.given[o.id] || '') + '" aria-label="Montant donné par le client">' +
+      '<span class="big" style="color:var(--red)">€</span></span></label>' +
+      '<div class="bills" id="bl-' + o.id + '">' + billsHtml(o) + '</div>' +
+      '<div class="rw" id="rd-' + o.id + '" style="padding-top:10px;border-top:1px solid var(--soft)">' + renduHtml(o) + '</div></div>' +
+      '<div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px">' +
+      '<button class="b-pret" data-act="pret" data-id="' + o.id + '">' + (ready ? 'Prêt · toucher pour annuler' : 'Prêt') + '</button>' +
+      '<button class="b-arch" data-act="archiver" data-id="' + o.id + '">Archiver</button></div></div>';
+    return h;
+  }
+
+  function thumb(it, px) {
+    var im = it.image || '', box = 'width:' + px + 'px;height:' + px + 'px;';
+    if (im.indexOf('sprite:') === 0) {
+      var i = parseInt(im.slice(7), 10) || 0;
+      return '<div class="sp" style="' + box + 'background-size:' + px * 5 + 'px ' + px * 4 + 'px;background-position:' + (-(i % 5) * px) + 'px ' + (-Math.floor(i / 5) * px) + 'px"></div>';
+    }
+    if (im.indexOf('file:') === 0) return '<img class="ph" style="' + box + '" src="' + im.slice(5).replace(/[^a-z0-9-]/g, '') + '.jpg" alt="">';
+    if (im.indexOf('data:image/') === 0) return '<img class="ph" style="' + box + '" src="' + E(im) + '" alt="">';
+    return '<div class="ph none" style="' + box + '"></div>';
+  }
+  function choicesToText(ch) { return (ch || []).map(function (g) { return g.label + ' : ' + (g.options || []).join(', '); }).join('\n'); }
+  function textToChoices(txt) {
+    var out = [];
+    String(txt || '').split('\n').forEach(function (line) {
+      var i = line.indexOf(':'); if (i < 0) return;
+      var label = line.slice(0, i).trim();
+      var opts = line.slice(i + 1).split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+      if (label && opts.length >= 2) out.push({ label: label.slice(0, 40), options: opts.slice(0, 4).map(function (x) { return x.slice(0, 30); }) });
+    });
+    return out.slice(0, 4);
+  }
+  function incIndex(f, p) {
+    for (var i = 0; i < f.includes.length; i++) {
+      var inc = f.includes[i];
+      if (inc.item_id === p.id || (!inc.item_id && inc.image && inc.image === p.image)) return i;
+    }
+    return -1;
+  }
+  function prodRow(p) {
+    var sup = p.kind === 'supplement';
+    var h = '<div class="p' + (p.hidden ? ' hid' : '') + '">' + (p.hidden ? '<div class="tag">Masqué pour les clients</div>' : '') +
+      '<div style="display:flex;align-items:center;gap:12px">' + thumb(p, 56) + '<div style="flex:1 1 0;min-width:0"><div style="font-size:17px;font-weight:700;line-height:1.2">' + E(p.title) + '</div>' +
+      (p.description ? '<div class="help" style="margin-top:2px">' + E(p.description) + '</div>' : '') + '</div></div>' +
+      '<div style="display:flex;align-items:center;gap:10px"><label style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700">Prix' +
+      '<input class="price" type="text" inputmode="decimal" enterkeyhint="done" data-price="' + p.id + '" value="' + num(p.price_cents) + '">€</label><div style="flex:1 1 0"></div>';
+    if (!sup) {
+      h += '<button class="pill' + (p.available ? '' : ' off') + '" data-act="dispo" data-id="' + p.id + '">' + (p.available ? 'Disponible' : 'Épuisé') + '</button>' +
+        '<button class="round" style="width:48px;height:48px;' + (S.menuId === p.id ? 'background:var(--ink);color:var(--gold)' : '') + '" data-act="dots" data-id="' + p.id + '" aria-label="Options">' +
+        '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg></button>';
+    }
+    h += '</div>';
+    if (S.confirmId === p.id) {
+      h += '<div class="confirm"><div>Supprimer définitivement « ' + E(p.title) + ' » ? Cette action est irréversible.</div><div style="display:flex;flex-wrap:wrap;gap:8px">' +
+        '<button class="act" data-act="del-no">Annuler</button><button class="act" style="background:var(--red);color:#fff;border-color:var(--red)" data-act="del-yes" data-id="' + p.id + '">Oui, supprimer</button></div></div>';
+    } else if (S.menuId === p.id) {
+      h += '<div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:10px;border-top:1px solid var(--soft)">' +
+        '<button class="act" data-act="edit" data-id="' + p.id + '">Modifier</button>' +
+        '<button class="act" data-act="hide" data-id="' + p.id + '">' + (p.hidden ? 'Afficher' : 'Masquer') + '</button>' +
+        '<button class="act danger" data-act="del-ask" data-id="' + p.id + '">Supprimer</button></div>';
+    }
+    return h + '</div>';
+  }
+  function formHtml() {
+    var f = S.form; if (!f) return '';
+    var menu = f.kind === 'menu';
+    var cats = CATS.slice(); S.items.forEach(function (p) { if (p.kind === 'produit' && cats.indexOf(p.category) < 0) cats.push(p.category); });
+    var h = '<div class="form" id="form"><div class="script" style="font-size:28px;line-height:1">' + (f.id ? (menu ? 'Modifier le menu' : 'Modifier le produit') : (menu ? 'Nouveau menu' : 'Nouveau produit')) + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:14px"><div style="flex:1 1 200px;display:flex;flex-direction:column;gap:8px"><div style="font-size:15px;font-weight:700">Image</div>' +
+      '<div id="fprev" style="display:flex;justify-content:center">' + thumb({ image: f.image }, 140) + '</div>' +
+      '<label class="btn-ghost" style="display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:50px;border-radius:14px;font-size:16px">Choisir une photo' +
+      '<input type="file" accept="image/*" id="ffile" style="position:absolute;inset:0;opacity:0;cursor:pointer"></label></div>' +
+      '<div style="flex:2 1 300px;display:flex;flex-direction:column;gap:12px">' +
+      '<label class="fld">Titre<input type="text" maxlength="80" enterkeyhint="done" data-f="title" value="' + E(f.title) + '" placeholder="Ex. : Rghaif au fromage"></label>' +
+      '<label class="fld">Description<textarea rows="2" maxlength="300" data-f="desc" placeholder="Ce que le client verra sous le titre">' + E(f.desc) + '</textarea></label>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:12px"><label class="fld" style="flex:1 1 120px">Prix (€)<input type="text" inputmode="decimal" enterkeyhint="done" data-f="price" value="' + E(f.price) + '" placeholder="0,00" style="font-size:20px;font-weight:900"></label>';
+    if (!menu) {
+      h += '<label class="fld" style="flex:2 1 180px">Catégorie<select data-f="cat">' + cats.map(function (c) { return '<option' + (c === f.cat ? ' selected' : '') + '>' + E(c) + '</option>'; }).join('') + '</select></label>';
+    }
+    h += '</div>';
+    if (menu) {
+      h += '<label class="fld">Choix proposés au client (facultatif)<textarea rows="3" data-f="choices" placeholder="Votre soupe : Harira, Bissara">' + E(f.choices) + '</textarea>' +
+        '<span class="help">Un choix par ligne : le titre, deux-points, puis les options séparées par des virgules.</span></label>';
+    }
+    if (menu) {
+      var prods = S.items.filter(function (p) { return p.kind === 'produit'; });
+      h += '<div class="fld">Produits inclus dans le menu (facultatif)<span class="help">Touchez les produits compris dans le menu, 6 au maximum. Le client verra leur photo et leur nom.</span><div class="chips">' +
+        prods.map(function (p) { return '<button type="button" class="chip' + (incIndex(f, p) >= 0 ? ' on' : '') + '" data-act="inc" data-id="' + p.id + '">' + thumb(p, 40) + '<span>' + E(p.title) + '</span></button>'; }).join('') + '</div>';
+      if (f.includes.length) {
+        h += '<span class="help" style="margin-top:6px">Nom affiché au client pour chaque produit inclus :</span>' +
+          f.includes.map(function (inc, i) { return '<div class="incl-ed">' + thumb({ image: inc.image }, 40) + '<input type="text" maxlength="30" enterkeyhint="done" data-inc="' + i + '" value="' + E(inc.label) + '" aria-label="Nom affiché"></div>'; }).join('');
+      }
+      h += '</div>';
+    }
+    h += '</div></div>' + (S.formErr ? '<div class="err">' + E(S.formErr) + '</div>' : '') +
+      '<div style="display:flex;flex-wrap:wrap;gap:10px"><button class="btn-ghost" data-act="form-cancel">Annuler</button><button class="btn-red" style="flex:1 1 200px" data-act="form-save">Enregistrer</button></div></div>';
+    return h;
+  }
+
+  function renderBody() {
+    var el = document.getElementById('body'); if (!el) return;
+    var focus = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute('data-given') : null;
+    var h = '';
+    if (S.tab === 'commandes') {
+      h = S.orders.length ? '<div class="grid-o">' + sortedOrders().map(orderCard).join('') + '</div>' : '<div class="empty">Aucune commande en cours</div>';
+    } else if (S.tab === 'archive') {
+      h = S.archive.length ? '<div style="display:flex;flex-direction:column;gap:10px">' + S.archive.map(function (a) {
+        return '<div class="arow"><div style="font-size:34px;font-weight:900;line-height:1;min-width:52px">' + pad(a.num) + '</div><div style="flex:1 1 220px;min-width:0">' +
+          '<div style="font-size:16px;font-weight:700">' + (a.mode === 'emporter' ? 'À emporter' : 'Sur place') + ' · ' + hhmm(a.created_at) + (a.pickup_at ? ' · réservée pour ' + hhmmLocal(a.pickup_at) : '') + '</div>' +
+          '<div class="help" style="font-size:15px">' + E((a.lines || []).map(function (l) { return l.qty + ' × ' + l.title; }).join(', ')) + '</div></div>' +
+          '<div style="font-size:22px;font-weight:900">' + eur(a.total_cents) + '</div>' +
+          '<button class="act" style="flex:0 0 auto;padding:0 14px" data-act="restore" data-id="' + a.id + '">Remettre en cours</button></div>';
+      }).join('') + '</div>' : '<div class="empty">L\'archive est vide</div>';
+    } else {
+      h = '<div style="display:flex;flex-wrap:wrap;gap:10px"><button class="btn-red" data-act="new-produit">+ Ajouter un produit</button><button class="btn-dark" data-act="new-menu">+ Ajouter un menu</button></div>' + formHtml();
+      var groups = ['Menus'].concat(CATS);
+      S.items.forEach(function (p) { if (groups.indexOf(p.category) < 0) groups.push(p.category); });
+      groups.forEach(function (g) {
+        var list = S.items.filter(function (p) { return g === 'Menus' ? p.kind !== 'produit' : (p.kind === 'produit' && p.category === g); });
+        if (list.length) h += '<div style="display:flex;flex-direction:column;gap:10px"><div class="band script">' + E(g) + '</div><div class="grid-p">' + list.map(prodRow).join('') + '</div></div>';
+      });
+      h += '<div style="border-top:1px solid var(--soft);padding-top:16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start">' +
+        '<button class="btn-ghost" data-act="ask">Changer l\'e-mail ou le code</button>' +
+        '<div class="help">Une confirmation est envoyée par e-mail à l\'administrateur. Rien ne change sans son accord.</div>' +
+        (S.askMsg ? '<div class="info">' + E(S.askMsg) + '</div>' : '') + (S.askErr ? '<div class="err">' + E(S.askErr) + '</div>' : '') + '</div>';
+    }
+    el.innerHTML = h;
+    if (focus) { var inp = el.querySelector('[data-given="' + focus + '"]'); if (inp) { inp.focus(); try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {} } }
+  }
+
+  function saveItem(p, patch) {
+    var body = Object.assign({ id: p.id, title: p.title, price_cents: p.price_cents }, patch);
+    return krpc('kitchen_save_item', { p_item: body }).then(loadItems).then(renderBody).catch(function (e) {
+      if (e.message !== 'PIN_INVALIDE') alert('La modification n\'a pas été enregistrée. Vérifiez la connexion et réessayez.');
+      return loadItems().then(renderBody).catch(function () {});
+    });
+  }
+  function setStatus(id, st) { return krpc('kitchen_set_status', { p_id: id, p_status: st }).then(poll).catch(function () {}); }
+  function resize(file, cb) {
+    var r = new FileReader();
+    r.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var max = 480, k = Math.min(1, max / Math.max(img.width, img.height));
+        var c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        var ctx = c.getContext('2d'); ctx.fillStyle = '#FDEFD4'; ctx.fillRect(0, 0, c.width, c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
+        cb(c.toDataURL('image/jpeg', 0.78));
+      };
+      img.onerror = function () { cb(null); };
+      img.src = r.result;
+    };
+    r.readAsDataURL(file);
+  }
+  function saveForm() {
+    var f = S.form; if (!f) return;
+    var pc = cents(f.price);
+    if (!f.title.trim() || pc === null) { S.formErr = 'Il faut au moins un titre et un prix.'; renderBody(); return; }
+    var body = { kind: f.kind, title: f.title.trim(), description: f.desc.trim(), price_cents: pc, category: f.kind === 'menu' ? 'Menus' : f.cat };
+    if (f.kind === 'menu') {
+      body.choices = textToChoices(f.choices);
+      body.includes = f.includes.map(function (inc) { return { item_id: inc.item_id || null, label: (inc.label || '').trim().slice(0, 30), image: inc.image || '' }; })
+        .filter(function (inc) { return inc.label; });
+    }
+    if (f.id) body.id = f.id;
+    if (!f.id || f.imageChanged) body.image = f.image || '';
+    krpc('kitchen_save_item', { p_item: body }).then(function () { S.form = null; S.formErr = ''; return loadItems(); }).then(renderBody).catch(function (e) {
+      if (e.message === 'PIN_INVALIDE') return;
+      S.formErr = (e.message === 'IMAGE_TROP_LOURDE' || e.message === 'INCLUS_INVALIDE') ? 'La photo est trop lourde. Choisissez-en une autre.' : 'L\'enregistrement a échoué. Vérifiez la connexion et réessayez.';
+      renderBody();
+    });
+  }
+
+  function calcCompute(a, op, b) {
+    var r = op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : (b === 0 ? NaN : a / b);
+    return isNaN(r) ? null : String(Math.round(r * 100) / 100);
+  }
+  function calcPress(key) {
+    var k = S.calc, hist = k.hist, shown = k.cur.replace('.', ','), val = parseFloat(k.cur) || 0, r;
+    if (key >= '0' && key <= '9') {
+      if (k.fresh) { k.cur = key; k.fresh = false; if (k.done) k.hist = []; k.done = false; }
+      else if (k.cur.length < 10) k.cur = k.cur === '0' ? key : k.cur + key;
+    } else if (key === ',') {
+      if (k.fresh) { k.cur = '0.'; k.fresh = false; if (k.done) k.hist = []; k.done = false; }
+      else if (k.cur.indexOf('.') < 0) k.cur += '.';
+    } else if (key === 'C') { S.calc = { cur: '0', prev: null, op: null, fresh: false, done: false, hist: [] }; }
+    else if (key === 'DEL') { if (!k.fresh) k.cur = k.cur.length > 1 ? k.cur.slice(0, -1) : '0'; }
+    else if (key === '=') {
+      if (k.op === null || k.prev === null) return;
+      r = calcCompute(k.prev, k.op, val);
+      S.calc = { cur: r === null ? '0' : r, prev: null, op: null, fresh: true, done: true, hist: hist.concat([shown, '=']) };
+    } else if (k.done) { S.calc = { cur: k.cur, prev: val, op: key, fresh: true, done: false, hist: [shown, key] }; }
+    else if (k.op !== null && k.prev !== null && k.fresh) { k.op = key; k.hist = hist.slice(0, -1).concat([key]); }
+    else if (k.op !== null && k.prev !== null) {
+      r = calcCompute(k.prev, k.op, val); var base = r === null ? 0 : parseFloat(r);
+      S.calc = { cur: String(base), prev: base, op: key, fresh: true, done: false, hist: hist.concat([shown, key]) };
+    } else { S.calc = { cur: k.cur, prev: val, op: key, fresh: true, done: false, hist: hist.concat([shown, key]) }; }
+  }
+  function renderCalc() {
+    if (!S.calcOpen) { ov.innerHTML = ''; return; }
+    var keys = [['C', 'C', 'fn', 'Effacer tout'], ['⌫', 'DEL', 'fn', 'Effacer un chiffre'], ['÷', '÷', 'op', 'Diviser'], ['×', '×', 'op', 'Multiplier'],
+      ['7', '7'], ['8', '8'], ['9', '9'], ['−', '−', 'op', 'Moins'], ['4', '4'], ['5', '5'], ['6', '6'], ['+', '+', 'op', 'Plus'],
+      ['1', '1'], ['2', '2'], ['3', '3'], ['=', '=', 'eq', 'Égal', 'grid-column:4;grid-row:4 / span 2'], ['0', '0', '', '', 'grid-column:1 / span 2;grid-row:5'], [',', ',', '', 'Virgule', 'grid-column:3;grid-row:5']];
+    ov.innerHTML = '<div class="veil"><div class="calc"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div class="script" style="font-size:26px;line-height:1">Calculatrice</div>' +
+      '<button class="btn-ghost" style="min-height:48px" data-act="calc-close">Fermer</button></div>' +
+      '<div class="cdisp"><div class="cexpr">' + E(S.calc.hist.join(' ')) + '</div><div class="cval">' + E(S.calc.cur.replace('.', ',')) + '</div></div><div class="ckeys">' +
+      keys.map(function (k) { return '<button class="ck ' + (k[2] || '') + '" data-act="ck" data-k="' + k[1] + '" aria-label="' + (k[3] || k[0]) + '" style="' + (k[4] || '') + '">' + k[0] + '</button>'; }).join('') + '</div></div></div>';
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest ? ev.target.closest('[data-act]') : null;
+    if (!b) return;
+    initAudio();
+    var act = b.getAttribute('data-act'), id = b.getAttribute('data-id'), p = id ? item(id) : null, o = id ? order(id) : null;
+    if (act === 'login') doLogin(false);
+    else if (act === 'lock') lock('');
+    else if (act === 'tab') { S.tab = id; S.menuId = null; S.confirmId = null; renderTop(); renderBody(); if (id === 'produits') loadItems().then(renderBody).catch(function () {}); }
+    else if (act === 'calc') { S.calcOpen = true; renderCalc(); }
+    else if (act === 'calc-close') { S.calcOpen = false; renderCalc(); }
+    else if (act === 'ck') { calcPress(b.getAttribute('data-k')); renderCalc(); }
+    else if (act === 'pret' && o) { var ns = o.status === 'pret' ? 'preparation' : 'pret'; o.status = ns; S.snap = ''; renderBody(); setStatus(id, ns); }
+    else if (act === 'archiver' && o) { S.orders = S.orders.filter(function (x) { return x.id !== id; }); delete S.given[id]; S.snap = ''; renderTop(); renderBody(); setStatus(id, 'archive'); }
+    else if (act === 'restore') { setStatus(id, 'preparation'); }
+    else if (act === 'bill' && o) {
+      try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
+      S.given[id] = b.getAttribute('data-v') + ',00';
+      var inp = document.querySelector('[data-given="' + id + '"]'); if (inp) inp.value = S.given[id];
+      document.getElementById('bl-' + id).innerHTML = billsHtml(o); document.getElementById('rd-' + id).innerHTML = renduHtml(o);
+    }
+    else if (act === 'dispo' && p) saveItem(p, { available: !p.available });
+    else if (act === 'dots') { S.menuId = S.menuId === id ? null : id; S.confirmId = null; renderBody(); }
+    else if (act === 'hide' && p) { S.menuId = null; saveItem(p, { hidden: !p.hidden }); }
+    else if (act === 'del-ask') { S.confirmId = id; renderBody(); }
+    else if (act === 'del-no') { S.confirmId = null; S.menuId = null; renderBody(); }
+    else if (act === 'del-yes') { S.confirmId = null; S.menuId = null; krpc('kitchen_delete_item', { p_id: id }).then(loadItems).then(renderBody).catch(function () {}); }
+    else if (act === 'edit' && p) {
+      S.menuId = null; S.formErr = '';
+      S.form = { id: p.id, kind: p.kind === 'menu' ? 'menu' : 'produit', title: p.title, desc: p.description || '', price: num(p.price_cents), cat: p.category, image: p.image || '', imageChanged: false, choices: choicesToText(p.choices),
+        includes: (p.includes || []).map(function (inc) { return { item_id: inc.item_id || null, label: inc.label || '', image: inc.image || (inc.sprite != null ? 'sprite:' + inc.sprite : '') }; }) };
+      renderBody(); var fe = document.getElementById('form'); if (fe) fe.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+    else if (act === 'new-produit' || act === 'new-menu') {
+      S.formErr = ''; S.form = { id: null, kind: act === 'new-menu' ? 'menu' : 'produit', title: '', desc: '', price: '', cat: CATS[0], image: '', imageChanged: true, choices: '', includes: [] };
+      renderBody();
+    }
+    else if (act === 'inc' && p && S.form) {
+      var ix = incIndex(S.form, p);
+      if (ix >= 0) S.form.includes.splice(ix, 1);
+      else if (S.form.includes.length < 6) S.form.includes.push({ item_id: p.id, label: p.title.slice(0, 30), image: p.image || '' });
+      renderBody();
+    }
+    else if (act === 'form-cancel') { S.form = null; S.formErr = ''; renderBody(); }
+    else if (act === 'form-save') saveForm();
+    else if (act === 'ask') ask();
+    else if (act === 'reset-save') resetSave();
+  });
+  document.addEventListener('input', function (ev) {
+    var t = ev.target, gid = t.getAttribute && t.getAttribute('data-given'), f = t.getAttribute && t.getAttribute('data-f');
+    if (gid) {
+      S.given[gid] = t.value; var o = order(gid);
+      if (o) { document.getElementById('bl-' + gid).innerHTML = billsHtml(o); document.getElementById('rd-' + gid).innerHTML = renduHtml(o); }
+    } else if (f && S.form) { S.form[f] = t.value; }
+    else if (t.getAttribute && t.getAttribute('data-inc') !== null && S.form) {
+      var inc = S.form.includes[+t.getAttribute('data-inc')]; if (inc) inc.label = t.value;
+    }
+  });
+  document.addEventListener('change', function (ev) {
+    var t = ev.target, pid = t.getAttribute && t.getAttribute('data-price');
+    if (pid) {
+      var p = item(pid), c = cents(t.value);
+      if (!p) return;
+      if (c === null || c > 100000) { t.value = num(p.price_cents); return; }
+      if (c !== p.price_cents) saveItem(p, { price_cents: c }); else t.value = num(c);
+    } else if (t.id === 'ffile' && S.form && t.files && t.files[0]) {
+      resize(t.files[0], function (url) {
+        if (!url || !S.form) return;
+        S.form.image = url; S.form.imageChanged = true;
+        var pv = document.getElementById('fprev'); if (pv) pv.innerHTML = thumb({ image: url }, 140);
+      });
+    }
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter') return;
+    var t = ev.target;
+    if (t.id === 'mail') { ev.preventDefault(); var pe = document.getElementById('pin'); if (pe) pe.focus(); }
+    else if (t.id === 'pin') { ev.preventDefault(); if (S.screen === 'reset') resetSave(); else doLogin(false); }
+    else if (t.tagName === 'INPUT') { ev.preventDefault(); t.blur(); }
+  });
+  document.addEventListener('focusin', function (ev) {
+    var t = ev.target; if (!t.getAttribute || !t.getAttribute('data-given')) return;
+    var card = t.closest('.o'), top = card ? card.querySelector('[data-top]') : null; if (!top) return;
+    var go = function () { try { top.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {} };
+    setTimeout(go, 150); setTimeout(go, 500);
+  });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) poll(); });
+
+  app.innerHTML = '<div class="login"><div style="font-size:18px;font-weight:700">Chargement…</div></div>';
+  var saved = ''; try { saved = sessionStorage.getItem(SESSION) || ''; } catch (e) {}
+  var hp = new URLSearchParams(String(location.hash || '').replace(/^#/, ''));
+  if (hp.get('access_token') || hp.get('error') || hp.get('error_code')) { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+  if (hp.get('access_token')) { S.token = hp.get('access_token'); S.screen = 'reset'; renderLogin(); return; }
+  if (hp.get('error') || hp.get('error_code')) S.loginErr = 'Le lien de confirmation a expiré ou a déjà servi. Demandez-en un nouveau.';
+  rpc('pin_defini').then(function (ok) {
+    if (!ok) { S.screen = 'setup'; renderLogin(); return; }
+    if (!saved) { S.screen = 'login'; renderLogin(); return; }
+    return rpc('verifier_pin', { p_pin: saved }).then(function (r) {
+      if (r && r.ok) { S.pin = saved; start(); } else { S.screen = 'login'; renderLogin(); }
+    });
+  }).catch(function () {
+    app.innerHTML = '<div class="login"><div class="err">Connexion impossible. Vérifiez le réseau puis rechargez la page.</div></div>';
+  });
+})();
+</script>
+</body>
+</html>
