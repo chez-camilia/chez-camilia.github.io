@@ -33,6 +33,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .orders-col .oc-h{padding:8px 10px}
 .orders-col .oc-body{padding:6px 10px;font-size:13px;max-height:120px;overflow-y:auto}
 .orders-title{font-size:14px;font-weight:900;padding:4px 2px;color:var(--brown)}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:4px}
+.filter-toggle{min-height:42px;padding:0 16px;border-radius:21px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:14px;font-weight:700}
+.filter-toggle.on{background:var(--ink);color:var(--gold)}
+.filter-cats{display:none;flex-wrap:wrap;gap:6px;width:100%;margin-top:4px}
+.filter-cats.open{display:flex}
 /* Mobile sticky cart */
 .cart-sticky{display:none}
 @media(max-width:820px){
@@ -117,9 +122,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .info{background:#E3F1E6;border:2px solid var(--green);color:#0E4A22;border-radius:12px;padding:12px;font-size:15px;font-weight:700}
 .offline{background:var(--darkred);color:#fff;border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700}
 .grid-o{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.oc{border-radius:16px;overflow:hidden;background:var(--card);border:3px solid var(--orange);display:flex;flex-direction:column}
+.oc{border-radius:16px;overflow:hidden;background:var(--card);border:3px solid var(--red);display:flex;flex-direction:column}
 .oc.ready{border-color:var(--green);animation:pulse 1.2s ease-in-out infinite}
-.oc-h{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--orange);color:var(--ink)}
+.oc-h{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--red);color:#fff}
 .oc.ready .oc-h{background:var(--green);color:#fff}
 .oc-n{font-size:48px;font-weight:900;line-height:1;letter-spacing:-1px}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(20,128,60,.45)}50%{box-shadow:0 0 0 10px rgba(20,128,60,0)}}
@@ -160,7 +165,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
   var S = {
     screen: 'boot', pin: '', tab: 'vente', items: [], cart: [], mode: 'place',
     given: '', cat: 'Tous', q: '', form: null, formErr: '', loginErr: '', offline: false,
-    lastOrder: null, showPay: false, msg: '', pinForm: false, pinMsg: '', pinOk: '', confirmId: null, menuSheet: null, orders: [], archive: [], timer: null, known: null, snap: '', audio: null
+    lastOrder: null, showPay: false, msg: '', pinForm: false, pinMsg: '', pinOk: '', confirmId: null, menuSheet: null, orders: [], archive: [], timer: null, known: null, snap: '', audio: null, filterOpen: false
   };
 
   function E(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -577,9 +582,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     var h = renderCartSticky() +
       '<div class="main"><div class="left">' +
       '<div class="search"><input type="search" placeholder="Rechercher…" data-q value="' + E(S.q) + '" enterkeyhint="search"></div>' +
-      '<div class="cats">' + CATS.map(function (c) {
-        return '<button class="catbtn' + (S.cat === c ? ' on' : '') + '" data-act="cat" data-id="' + E(c) + '">' + E(c) + '</button>';
-      }).join('') + '</div>' +
+      '<div class="filter-bar">' +
+      '<button type="button" class="filter-toggle' + (S.filterOpen ? ' on' : '') + '" data-act="filter-toggle">Filtre</button>' +
+      '<div class="filter-cats' + (S.filterOpen ? ' open' : '') + '">' +
+      CATS.map(function (c) {
+        return '<button type="button" class="catbtn' + (S.cat === c ? ' on' : '') + '" data-act="cat" data-id="' + E(c) + '">' + E(c) + '</button>';
+      }).join('') +
+      '</div></div>' +
       '<div class="grid-p4">';
     if (!list.length) h += '<div class="empty" style="grid-column:1/-1">Aucun produit</div>';
     list.forEach(function (p) {
@@ -855,7 +864,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     if (act === 'login') doLogin();
     else if (act === 'lock') lock('');
     else if (act === 'tab') { S.tab = id; S.form = null; S.msg = ''; S.confirmId = null; renderTop(); renderBody(); if (id === 'produits' || id === 'vente') loadItems().then(renderBody).catch(function () {}); if (id === 'commandes') pollOrders(); }
-    else if (act === 'cat') { S.cat = id; renderBody(); }
+    else if (act === 'filter-toggle') { S.filterOpen = !S.filterOpen; renderBody(); }
+    else if (act === 'cat') { S.cat = id; S.filterOpen = true; renderBody(); }
     else if (act === 'open-cart') { openCartModal(); }
     else if (act === 'add') {
       var p = item(id); if (!p) return;
