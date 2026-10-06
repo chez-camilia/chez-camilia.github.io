@@ -410,9 +410,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
       pollOrders();
       renderTop();
       renderBody();
-      if (S.lastOrder.id) {
-        krpc('kitchen_set_status', { p_id: S.lastOrder.id, p_status: 'pret' }).catch(function () {});
-      }
+      // reste en préparation (rouge + chrono) jusqu'au clic Prêt en cuisine/caisse
     }).catch(function () {
       S.lastOrder = { num: Math.floor(Math.random() * 90) + 10, total_cents: total, id: null, local: true };
       S.showPay = true;
