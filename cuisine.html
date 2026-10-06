@@ -190,7 +190,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     if (S.timer) clearInterval(S.timer);
     S.timer = setInterval(poll, 4000);
     if (S.clock) clearInterval(S.clock);
-    S.clock = setInterval(tick, 20000);
+    S.clock = setInterval(tick, 15000);
     try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {}
   }
   function lock(msg) {
@@ -264,8 +264,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       if (o.pickup_at && o.status === 'preparation' && isDue(o) && !S.dueKnown[o.id]) { S.dueKnown[o.id] = 1; rang = true; }
     });
     if (rang) beep();
+    // maj chronos minutes sans tout re-render
+    document.querySelectorAll('[data-wait]').forEach(function (el) {
+      el.textContent = waitMins(el.getAttribute('data-wait'));
+    });
     var has = S.orders.some(function (o) { return o.pickup_at; });
-    if (S.tab === 'commandes' && (rang || has)) renderBody();
+    if (S.tab === 'commandes' && rang) renderBody();
   }
   function hhmmLocal(iso) { var d = new Date(iso); return pad(d.getHours()) + 'h' + pad(d.getMinutes()); }
 
@@ -298,6 +302,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       return '<button class="bill b' + v + (g === v * 100 ? ' on' : '') + '" data-act="bill" data-id="' + o.id + '" data-v="' + v + '">' + BILL_SVG + '<span>' + v + ' €</span></button>';
     }).join('');
   }
+  function waitMins(iso) {
+    if (!iso) return '00';
+    var m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (m < 0) m = 0;
+    if (m > 99) m = 99;
+    return pad(m);
+  }
   function orderCard(o) {
     var ready = o.status === 'pret';
     var due = isDue(o);
@@ -306,21 +317,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         (due ? 'À préparer maintenant<br>' : '') + 'Réservée pour ' + hhmmLocal(o.pickup_at) + '</div></div>' : '') +
       '<div class="o-h"><div class="o-n">' + pad(o.num) + '</div><div style="text-align:right">' +
       '<div style="font-size:18px;font-weight:900">' + (o.mode === 'emporter' ? 'À emporter' : 'Sur place') + '</div>' +
-      '<div style="font-size:15px;font-weight:700">' + (ready ? 'Prêt' : 'En préparation') + ' · ' + hhmm(o.created_at) + '</div></div></div><div style="padding:6px 16px 0">';
+      '<div style="font-size:15px;font-weight:700">' + (ready ? 'Prêt' : 'En préparation') + ' · ' + hhmm(o.created_at) + '</div>' +
+      (!ready ? '<div style="margin-top:4px"><span class="chrono-lab">attente </span><span class="chrono" data-wait="' + E(o.created_at) + '">' + waitMins(o.created_at) + '</span><span class="chrono-lab"> min</span></div>' : '') +
+      '</div></div><div style="padding:6px 16px 0">';
     (o.lines || []).forEach(function (l) {
       h += '<div class="ln"><div class="q">' + l.qty + ' ×</div><div><div class="t">' + E(l.title) + '</div>' + (l.detail ? '<div class="d">' + E(l.detail) + '</div>' : '') + '</div></div>';
     });
-    if (o.mode === 'emporter') h += '<div class="ln"><div class="q">' + o.plateaux + ' ×</div><div><div class="t">Plateau à emporter</div></div></div>';
-    h += '</div><div class="rw" data-top="1" style="padding:12px 16px;scroll-margin-top:8px"><div class="lab">À encaisser</div><div class="big">' + eur(o.total_cents) + '</div></div>' +
-      '<div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:10px">' +
-      '<label class="rw lab" style="align-items:center">Client<span style="display:flex;align-items:center;gap:6px">' +
-      '<input class="given" type="text" inputmode="decimal" enterkeyhint="done" placeholder="0,00" data-given="' + o.id + '" value="' + E(S.given[o.id] || '') + '" aria-label="Montant donné par le client">' +
-      '<span class="big" style="color:var(--red)">€</span></span></label>' +
-      '<div class="bills" id="bl-' + o.id + '">' + billsHtml(o) + '</div>' +
-      '<div class="rw" id="rd-' + o.id + '" style="padding-top:10px;border-top:1px solid var(--soft)">' + renduHtml(o) + '</div></div>' +
-      '<div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px">' +
-      '<button class="b-pret" data-act="pret" data-id="' + o.id + '">' + (ready ? 'Prêt · toucher pour annuler' : 'Prêt') + '</button>' +
-      '<button class="b-arch" data-act="archiver" data-id="' + o.id + '">Archiver</button></div></div>';
+    if (o.mode === 'emporter' && o.plateaux) h += '<div class="ln"><div class="q">' + o.plateaux + ' ×</div><div><div class="t">Plateau à emporter</div></div></div>';
+    h += '</div><div style="padding:12px 16px 16px">' +
+      '<button class="b-pret" data-act="pret" data-id="' + o.id + '">' + (ready ? 'Prêt · toucher pour annuler' : 'Prêt') + '</button></div></div>';
     return h;
   }
 

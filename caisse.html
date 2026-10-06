@@ -33,6 +33,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .orders-col .oc-h{padding:8px 10px}
 .orders-col .oc-body{padding:6px 10px;font-size:13px;max-height:120px;overflow-y:auto}
 .orders-title{font-size:14px;font-weight:900;padding:4px 2px;color:var(--brown)}
+.chrono{font-size:22px;font-weight:900;color:#39FF14;letter-spacing:1px;font-variant-numeric:tabular-nums;text-shadow:0 0 8px rgba(57,255,20,.55)}
+.chrono-lab{font-size:11px;font-weight:700;color:#39FF14;opacity:.9}
 .filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:4px}
 .filter-toggle{min-height:42px;padding:0 16px;border-radius:21px;border:2px solid var(--ink);background:#fff;color:var(--ink);font-size:14px;font-weight:700}
 .filter-toggle.on{background:var(--ink);color:var(--gold)}
@@ -270,6 +272,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
   function lock(msg) {
     try { sessionStorage.removeItem(SESSION); localStorage.removeItem(FLAG); } catch (e) {}
     if (S.timer) clearInterval(S.timer);
+    if (S.chronoTimer) clearInterval(S.chronoTimer);
     S.pin = ''; S.screen = 'login'; S.loginErr = msg || ''; ov.innerHTML = ''; S.menuSheet = null;
     renderLogin();
   }
@@ -283,6 +286,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     pollOrders();
     if (S.timer) clearInterval(S.timer);
     S.timer = setInterval(pollOrders, 4000);
+    if (S.chronoTimer) clearInterval(S.chronoTimer);
+    S.chronoTimer = setInterval(function () {
+      document.querySelectorAll('[data-wait]').forEach(function (el) {
+        el.textContent = waitMins(el.getAttribute('data-wait'));
+      });
+    }, 15000);
     try { if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {}); } catch (e) {}
   }
 
@@ -529,7 +538,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
         h += '<div class="oc' + (ready ? ' ready' : '') + '">' +
           '<div class="oc-h"><div class="oc-n">' + pad(o.num) + '</div><div style="text-align:right">' +
           '<div style="font-size:13px;font-weight:900">' + (ready ? 'PRÊT' : 'En cours') + '</div>' +
-          '<div style="font-size:11px;font-weight:700">' + (o.mode === 'emporter' ? 'Emporter' : 'Place') + ' · ' + hhmm(o.created_at) + '</div></div></div>' +
+          '<div style="font-size:11px;font-weight:700">' + (o.mode === 'emporter' ? 'Emporter' : 'Place') + ' · ' + hhmm(o.created_at) + '</div>' +
+          (!ready ? '<div style="margin-top:2px"><span class="chrono" data-wait="' + E(o.created_at) + '">' + waitMins(o.created_at) + '</span><span class="chrono-lab"> min</span></div>' : '') +
+          '</div></div>' +
           '<div class="oc-body">';
         (o.lines || []).slice(0, 6).forEach(function (l) {
           h += '<div style="display:flex;gap:4px;padding:2px 0"><b style="color:var(--darkred)">' + l.qty + '×</b> ' + E(l.title) + '</div>';
@@ -665,6 +676,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     return h;
   }
 
+  function waitMins(iso) {
+    if (!iso) return '00';
+    var m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (m < 0) m = 0;
+    if (m > 99) m = 99;
+    return pad(m);
+  }
   function hhmm(iso) {
     if (!iso) return '';
     var d = new Date(iso);
@@ -690,6 +708,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
         '<div class="oc-h"><div class="oc-n">' + pad(o.num) + '</div><div style="text-align:right">' +
         '<div style="font-size:16px;font-weight:900">' + (ready ? 'PRÊT' : 'En préparation') + '</div>' +
         '<div style="font-size:13px;font-weight:700">' + (o.mode === 'emporter' ? 'À emporter' : 'Sur place') + ' · ' + hhmm(o.created_at) + '</div>' +
+        (!ready ? '<div style="margin-top:2px"><span class="chrono" data-wait="' + E(o.created_at) + '">' + waitMins(o.created_at) + '</span><span class="chrono-lab"> min</span></div>' : '') +
         '<div class="src">' + orderSource(o) + '</div></div></div>' +
         '<div style="padding:8px 14px 4px">';
       (o.lines || []).forEach(function (l) {
